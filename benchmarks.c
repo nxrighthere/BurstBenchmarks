@@ -172,12 +172,13 @@ inline static void benchmark_nbody_advance(NBody* sun, NBody* end, double distan
 				dz = bj->z - iz,
 				jmass = bj->mass,
 				mag = distance / benchmark_nbody_get_d2(dx, dy, dz);
-				bj->vx = bj->vx - dx * imass * mag;
-				bj->vy = bj->vy - dy * imass * mag;
-				bj->vz = bj->vz - dz * imass * mag;
-				ivx = ivx + dx * jmass * mag;
-				ivy = ivy + dy * jmass * mag;
-				ivz = ivz + dz * jmass * mag;
+
+			bj->vx = bj->vx - dx * imass * mag;
+			bj->vy = bj->vy - dy * imass * mag;
+			bj->vz = bj->vz - dz * imass * mag;
+			ivx = ivx + dx * jmass * mag;
+			ivy = ivy + dy * jmass * mag;
+			ivz = ivz + dz * jmass * mag;
 		}
 
 		bi->vx = ivx;

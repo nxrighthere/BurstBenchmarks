@@ -255,12 +255,13 @@ public class Benchmarks : JobComponentSystem {
 							dz = bj->z - iz,
 							jmass = bj->mass,
 							mag = distance / GetD2(dx, dy, dz);
-							bj->vx = bj->vx - dx * imass * mag;
-							bj->vy = bj->vy - dy * imass * mag;
-							bj->vz = bj->vz - dz * imass * mag;
-							ivx = ivx + dx * jmass * mag;
-							ivy = ivy + dy * jmass * mag;
-							ivz = ivz + dz * jmass * mag;
+
+						bj->vx = bj->vx - dx * imass * mag;
+						bj->vy = bj->vy - dy * imass * mag;
+						bj->vz = bj->vz - dz * imass * mag;
+						ivx = ivx + dx * jmass * mag;
+						ivy = ivy + dy * jmass * mag;
+						ivz = ivz + dz * jmass * mag;
 					}
 
 					bi->vx = ivx;
