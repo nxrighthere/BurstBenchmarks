@@ -10,3 +10,6 @@ GCC 8.1.0
 | Burst    | 95,657,085 ticks  | 65,528,410 ticks  | 122,715,369 ticks |
 | GCC      | 103,578,985 ticks | 28,788,322 ticks  | 203,429,182 ticks |
 | Mono JIT | 195,152,736 ticks | 116,309,579 ticks | 330,834,294 ticks |
+
+### Notes
+Suppressing the generation of static unwind tables for exception handling with GCC using `-fno-asynchronous-unwind-tables` leads to better performance in the recursive Fibonacci test: 84,983,484 ticks. All other tests remain unaffected.
