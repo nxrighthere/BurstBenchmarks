@@ -137,7 +137,7 @@ public class Benchmarks : JobComponentSystem {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private void InitializeBodies(NBody* sun, NBody* end) {
 			const double pi = 3.141592653589793;
-			const double solarMass = 4 * pi * pi;
+			const double solarmass = 4 * pi * pi;
 			const double daysPerYear = 365.24;
 
 			unchecked {
@@ -148,7 +148,7 @@ public class Benchmarks : JobComponentSystem {
 					vx = 1.66007664274403694e-03 * daysPerYear,
 					vy = 7.69901118419740425e-03 * daysPerYear,
 					vz = -6.90460016972063023e-05 * daysPerYear,
-					mass = 9.54791938424326609e-04 * solarMass
+					mass = 9.54791938424326609e-04 * solarmass
 				};
 
 				sun[2] = new NBody { // Saturn
@@ -158,7 +158,7 @@ public class Benchmarks : JobComponentSystem {
 					vx = -2.76742510726862411e-03 * daysPerYear,
 					vy = 4.99852801234917238e-03 * daysPerYear,
 					vz = 2.30417297573763929e-05 * daysPerYear,
-					mass = 2.85885980666130812e-04 * solarMass
+					mass = 2.85885980666130812e-04 * solarmass
 				};
 
 				sun[3] = new NBody { // Uranus
@@ -168,7 +168,7 @@ public class Benchmarks : JobComponentSystem {
 					vx = 2.96460137564761618e-03 * daysPerYear,
 					vy = 2.37847173959480950e-03 * daysPerYear,
 					vz = -2.96589568540237556e-05 * daysPerYear,
-					mass = 4.36624404335156298e-05 * solarMass
+					mass = 4.36624404335156298e-05 * solarmass
 				};
 
 				sun[4] = new NBody { // Neptune
@@ -178,7 +178,7 @@ public class Benchmarks : JobComponentSystem {
 					vx = 2.68067772490389322e-03 * daysPerYear,
 					vy = 1.62824170038242295e-03 * daysPerYear,
 					vz = -9.51592254519715870e-05 * daysPerYear,
-					mass = 5.15138902046611451e-05 * solarMass
+					mass = 5.15138902046611451e-05 * solarmass
 				};
 
 				double vx = 0, vy = 0, vz = 0;
@@ -191,10 +191,10 @@ public class Benchmarks : JobComponentSystem {
 					vz += planet->vz * mass;
 				}
 
-				sun->mass = solarMass;
-				sun->vx = vx / -solarMass;
-				sun->vy = vy / -solarMass;
-				sun->vz = vz / -solarMass;
+				sun->mass = solarmass;
+				sun->vx = vx / -solarmass;
+				sun->vy = vy / -solarmass;
+				sun->vz = vz / -solarmass;
 			}
 		}
 
@@ -255,13 +255,12 @@ public class Benchmarks : JobComponentSystem {
 							dz = bj->z - iz,
 							jmass = bj->mass,
 							mag = distance / GetD2(dx, dy, dz);
-
-						bj->vx = bj->vx - dx * imass * mag;
-						bj->vy = bj->vy - dy * imass * mag;
-						bj->vz = bj->vz - dz * imass * mag;
-						ivx = ivx + dx * jmass * mag;
-						ivy = ivy + dy * jmass * mag;
-						ivz = ivz + dz * jmass * mag;
+							bj->vx = bj->vx - dx * imass * mag;
+							bj->vy = bj->vy - dy * imass * mag;
+							bj->vz = bj->vz - dz * imass * mag;
+							ivx = ivx + dx * jmass * mag;
+							ivy = ivy + dy * jmass * mag;
+							ivz = ivz + dz * jmass * mag;
 					}
 
 					bi->vx = ivx;
