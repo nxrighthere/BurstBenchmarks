@@ -289,12 +289,66 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
+	// Sieve of Eratosthenes
+
+	[BurstCompile]
+	private unsafe struct SieveOfEratosthenesBurst : IJob {
+		public uint iterations;
+		public uint result;
+
+		public void Execute() {
+			result = SieveOfEratosthenes(iterations);
+		}
+
+		private uint SieveOfEratosthenes(uint iterations) {
+			const int size = 1024;
+
+			byte* flags = stackalloc byte[size];
+			uint a, b, c, prime, count = 0;
+
+			for (a = 1; a <= iterations; a++) {
+				count = 0;
+
+				for (b = 0; b <= size; b++) {
+					flags[b] = 1; // True
+				}
+
+				for (b = 0; b <= size; b++) {
+					if (flags[b] == 1) {
+						prime = b + b + 3;
+						c = b + prime;
+
+						while (c <= size) {
+							flags[c] = 0; // False
+							c += prime;
+						}
+
+						count++;
+					}
+				}
+			}
+
+			return count;
+		}
+	}
+
+	[BurstCompile]
+	private unsafe struct SieveOfEratosthenesGCC : IJob {
+		public uint iterations;
+		public uint result;
+
+		public void Execute() {
+			result = benchmark_sieve_of_eratosthenes(iterations);
+		}
+	}
+
 	protected override void OnCreate() {
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		long time = 0;
 		uint fibonacci = 46;
 		uint mandelbrot = 8;
 		uint nbody = 100000000;
+		uint sieveOfEratosthenes = 1000000;
 
 		{
 			var fibonacciBurst = new FibonacciBurst {
@@ -418,6 +472,45 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono JIT) NBody: " + time + " ticks");
 		}
+
+		{
+			var sieveOfEratosthenesBurst = new SieveOfEratosthenesBurst {
+				iterations = sieveOfEratosthenes
+			};
+
+			stopwatch.Restart();
+			sieveOfEratosthenesBurst.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Burst) Sieve of Eratosthenes: " + time + " ticks");
+		}
+
+		{
+			var sieveOfEratosthenesGCC = new SieveOfEratosthenesGCC {
+				iterations = sieveOfEratosthenes
+			};
+
+			stopwatch.Restart();
+			sieveOfEratosthenesGCC.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(GCC) Sieve of Eratosthenes: " + time + " ticks");
+		}
+
+		{
+			var sieveOfEratosthenesMono = new SieveOfEratosthenesBurst {
+				iterations = sieveOfEratosthenes
+			};
+
+			stopwatch.Restart();
+			sieveOfEratosthenesMono.Execute();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Mono JIT) Sieve of Eratosthenes: " + time + " ticks");
+		}
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {
@@ -434,4 +527,7 @@ public class Benchmarks : JobComponentSystem {
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
 	public static extern double benchmark_nbody(uint advancements);
+
+	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
+	public static extern uint benchmark_sieve_of_eratosthenes(uint iterations);
 }
