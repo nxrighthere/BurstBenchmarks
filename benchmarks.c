@@ -8,12 +8,16 @@
 	#define EXPORT extern
 #endif
 
+// Fibonacci
+
 EXPORT uint32_t benchmark_fibonacci(uint32_t number) {
 	if (number <= 1)
 		return 1;
 
 	return benchmark_fibonacci(number - 1) + benchmark_fibonacci(number - 2);
 }
+
+// Mandelbrot
 
 EXPORT float benchmark_mandelbrot(uint32_t width, uint32_t height, uint32_t iterations) {
 	float data = 0.0f;
@@ -56,13 +60,15 @@ EXPORT float benchmark_mandelbrot(uint32_t width, uint32_t height, uint32_t iter
 	return data;
 }
 
+// NBody
+
 typedef struct _NBody {
 	double x, y, z, vx, vy, vz, mass;
 } NBody;
 
 inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 	const double pi = 3.141592653589793;
-	const double solarmass = 4 * pi * pi;
+	const double solarMass = 4 * pi * pi;
 	const double daysPerYear = 365.24;
 
 	sun[1] = (NBody){ // Jupiter
@@ -72,7 +78,7 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 		1.66007664274403694e-03 * daysPerYear,
 		7.69901118419740425e-03 * daysPerYear,
 		-6.90460016972063023e-05 * daysPerYear,
-		9.54791938424326609e-04 * solarmass
+		9.54791938424326609e-04 * solarMass
 	};
 
 	sun[2] = (NBody){ // Saturn
@@ -82,7 +88,7 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 		-2.76742510726862411e-03 * daysPerYear,
 		4.99852801234917238e-03 * daysPerYear,
 		2.30417297573763929e-05 * daysPerYear,
-		2.85885980666130812e-04 * solarmass
+		2.85885980666130812e-04 * solarMass
 	};
 
 	sun[3] = (NBody){ // Uranus
@@ -92,7 +98,7 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 		2.96460137564761618e-03 * daysPerYear,
 		2.37847173959480950e-03 * daysPerYear,
 		-2.96589568540237556e-05 * daysPerYear,
-		4.36624404335156298e-05 * solarmass
+		4.36624404335156298e-05 * solarMass
 	};
 
 	sun[4] = (NBody){ // Neptune
@@ -102,7 +108,7 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 		2.68067772490389322e-03 * daysPerYear,
 		1.62824170038242295e-03 * daysPerYear,
 		-9.51592254519715870e-05 * daysPerYear,
-		5.15138902046611451e-05 * solarmass
+		5.15138902046611451e-05 * solarMass
 	};
 
 	double vx = 0, vy = 0, vz = 0;
@@ -115,10 +121,10 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 		vz += planet->vz * mass;
 	}
 
-	sun->mass = solarmass;
-	sun->vx = vx / -solarmass;
-	sun->vy = vy / -solarmass;
-	sun->vz = vz / -solarmass;
+	sun->mass = solarMass;
+	sun->vx = vx / -solarMass;
+	sun->vy = vy / -solarMass;
+	sun->vz = vz / -solarMass;
 }
 
 inline static void benchmark_nbody_energy(NBody* sun, NBody* end) {
@@ -172,12 +178,13 @@ inline static void benchmark_nbody_advance(NBody* sun, NBody* end, double distan
 				dz = bj->z - iz,
 				jmass = bj->mass,
 				mag = distance / benchmark_nbody_get_d2(dx, dy, dz);
-				bj->vx = bj->vx - dx * imass * mag;
-				bj->vy = bj->vy - dy * imass * mag;
-				bj->vz = bj->vz - dz * imass * mag;
-				ivx = ivx + dx * jmass * mag;
-				ivy = ivy + dy * jmass * mag;
-				ivz = ivz + dz * jmass * mag;
+
+			bj->vx = bj->vx - dx * imass * mag;
+			bj->vy = bj->vy - dy * imass * mag;
+			bj->vz = bj->vz - dz * imass * mag;
+			ivx = ivx + dx * jmass * mag;
+			ivy = ivy + dy * jmass * mag;
+			ivz = ivz + dz * jmass * mag;
 		}
 
 		bi->vx = ivx;
