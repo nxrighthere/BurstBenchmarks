@@ -13,7 +13,7 @@ GCC 8.1.0
 ### Notes
 Suppressing the generation of static unwind tables for exception handling with GCC using `-fno-asynchronous-unwind-tables` leads to better performance in the recursive Fibonacci test: 84,983,484 ticks. All other tests remain unaffected.
 
-Eliminating nested stack allocations in the Mandelbrot test leads to better performance of GCC over Burst by 7%.
+Elimination of nested stack allocations in the Mandelbrot test leads to better performance of GCC over Burst by 7%.
 
 ### Discussion
 Feel free to join the discussion in the [thread](https://forum.unity.com/threads/benchmarking-burst-against-gcc-machine-code-fibonacci-mandelbrot-nbody.715133/) on Unity forums.
