@@ -10,7 +10,7 @@ using UnityEngine;
 public class Benchmarks : JobComponentSystem {
 	// Fibonacci
 
-	[BurstCompile]
+	[BurstCompile(CompileSynchronously = true)]
 	private struct FibonacciBurst : IJob {
 		public uint number;
 		public uint result;
@@ -27,7 +27,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
-	[BurstCompile]
+	[BurstCompile(CompileSynchronously = true)]
 	private struct FibonacciGCC : IJob {
 		public uint number;
 		public uint result;
@@ -39,7 +39,7 @@ public class Benchmarks : JobComponentSystem {
 
 	// Mandelbrot
 
-	[BurstCompile]
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
 	private struct MandelbrotBurst : IJob {
 		public uint width;
 		public uint height;
@@ -92,7 +92,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
-	[BurstCompile]
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
 	private struct MandelbrotGCC : IJob {
 		public uint width;
 		public uint height;
@@ -110,7 +110,7 @@ public class Benchmarks : JobComponentSystem {
 		public double x, y, z, vx, vy, vz, mass;
 	}
 
-	[BurstCompile]
+	[BurstCompile(CompileSynchronously = true)]
 	private unsafe struct NBodyBurst : IJob {
 		public uint advancements;
 		public double result;
@@ -280,7 +280,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
-	[BurstCompile]
+	[BurstCompile(CompileSynchronously = true)]
 	private unsafe struct NBodyGCC : IJob {
 		public uint advancements;
 		public double result;
@@ -292,7 +292,7 @@ public class Benchmarks : JobComponentSystem {
 
 	// Sieve of Eratosthenes
 
-	[BurstCompile]
+	[BurstCompile(CompileSynchronously = true)]
 	private unsafe struct SieveOfEratosthenesBurst : IJob {
 		public uint iterations;
 		public uint result;
@@ -333,7 +333,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
-	[BurstCompile]
+	[BurstCompile(CompileSynchronously = true)]
 	private unsafe struct SieveOfEratosthenesGCC : IJob {
 		public uint iterations;
 		public uint result;
@@ -356,7 +356,7 @@ public class Benchmarks : JobComponentSystem {
 		Sun = 3
 	}
 
-	[BurstCompile]
+	[BurstCompile(CompileSynchronously = true)]
 	private unsafe struct PixarRaytracerBurst : IJob {
 		public uint width;
 		public uint height;
@@ -640,7 +640,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
-	[BurstCompile]
+	[BurstCompile(CompileSynchronously = true)]
 	private unsafe struct PixarRaytracerGCC : IJob {
 		public uint width;
 		public uint height;
@@ -666,6 +666,9 @@ public class Benchmarks : JobComponentSystem {
 				number = fibonacci
 			};
 
+			stopwatch.Stop();
+			fibonacciBurst.Run();
+
 			stopwatch.Restart();
 			fibonacciBurst.Run();
 
@@ -679,6 +682,9 @@ public class Benchmarks : JobComponentSystem {
 				number = fibonacci
 			};
 
+			stopwatch.Stop();
+			fibonacciGCC.Run();
+
 			stopwatch.Restart();
 			fibonacciGCC.Run();
 
@@ -691,6 +697,9 @@ public class Benchmarks : JobComponentSystem {
 			var fibonacciMono = new FibonacciBurst {
 				number = fibonacci
 			};
+
+			stopwatch.Stop();
+			fibonacciMono.Execute();
 
 			stopwatch.Restart();
 			fibonacciMono.Execute();
@@ -707,6 +716,9 @@ public class Benchmarks : JobComponentSystem {
 				iterations = mandelbrot
 			};
 
+			stopwatch.Stop();
+			mandelbrotBurst.Run();
+
 			stopwatch.Restart();
 			mandelbrotBurst.Run();
 
@@ -721,6 +733,9 @@ public class Benchmarks : JobComponentSystem {
 				height = 1080,
 				iterations = mandelbrot
 			};
+
+			stopwatch.Stop();
+			mandelbrotGCC.Run();
 
 			stopwatch.Restart();
 			mandelbrotGCC.Run();
@@ -737,6 +752,9 @@ public class Benchmarks : JobComponentSystem {
 				iterations = mandelbrot
 			};
 
+			stopwatch.Stop();
+			mandelbrotMono.Execute();
+
 			stopwatch.Restart();
 			mandelbrotMono.Execute();
 
@@ -749,6 +767,9 @@ public class Benchmarks : JobComponentSystem {
 			var nbodyBurst = new NBodyBurst {
 				advancements = nbody
 			};
+
+			stopwatch.Stop();
+			nbodyBurst.Run();
 
 			stopwatch.Restart();
 			nbodyBurst.Run();
@@ -763,6 +784,9 @@ public class Benchmarks : JobComponentSystem {
 				advancements = nbody
 			};
 
+			stopwatch.Stop();
+			nbodyGCC.Run();
+
 			stopwatch.Restart();
 			nbodyGCC.Run();
 
@@ -775,6 +799,9 @@ public class Benchmarks : JobComponentSystem {
 			var nbodyMono = new NBodyBurst {
 				advancements = nbody
 			};
+
+			stopwatch.Stop();
+			nbodyMono.Execute();
 
 			stopwatch.Restart();
 			nbodyMono.Execute();
@@ -789,6 +816,9 @@ public class Benchmarks : JobComponentSystem {
 				iterations = sieveOfEratosthenes
 			};
 
+			stopwatch.Stop();
+			sieveOfEratosthenesBurst.Run();
+
 			stopwatch.Restart();
 			sieveOfEratosthenesBurst.Run();
 
@@ -802,6 +832,9 @@ public class Benchmarks : JobComponentSystem {
 				iterations = sieveOfEratosthenes
 			};
 
+			stopwatch.Stop();
+			sieveOfEratosthenesGCC.Run();
+
 			stopwatch.Restart();
 			sieveOfEratosthenesGCC.Run();
 
@@ -814,6 +847,9 @@ public class Benchmarks : JobComponentSystem {
 			var sieveOfEratosthenesMono = new SieveOfEratosthenesBurst {
 				iterations = sieveOfEratosthenes
 			};
+
+			stopwatch.Stop();
+			sieveOfEratosthenesMono.Execute();
 
 			stopwatch.Restart();
 			sieveOfEratosthenesMono.Execute();
@@ -830,6 +866,9 @@ public class Benchmarks : JobComponentSystem {
 				samples = pixarRaytracer
 			};
 
+			stopwatch.Stop();
+			pixarRaytracerBurst.Run();
+
 			stopwatch.Restart();
 			pixarRaytracerBurst.Run();
 
@@ -845,6 +884,9 @@ public class Benchmarks : JobComponentSystem {
 				samples = pixarRaytracer
 			};
 
+			stopwatch.Stop();
+			pixarRaytracerGCC.Run();
+
 			stopwatch.Restart();
 			pixarRaytracerGCC.Run();
 
@@ -859,6 +901,9 @@ public class Benchmarks : JobComponentSystem {
 				height = 480,
 				samples = pixarRaytracer
 			};
+
+			stopwatch.Stop();
+			pixarRaytracerMono.Execute();
 
 			stopwatch.Restart();
 			pixarRaytracerMono.Execute();
