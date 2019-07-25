@@ -863,7 +863,7 @@ public class Benchmarks : JobComponentSystem {
 
 			time = stopwatch.ElapsedTicks;
 
-			Debug.Log("(Mono) Pixar Raytracer: " + time + " ticks");
+			Debug.Log("(Mono JIT) Pixar Raytracer: " + time + " ticks");
 		}
 	}
 
