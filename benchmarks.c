@@ -453,7 +453,8 @@ static Vector benchmark_pixar_raytracer_trace(Vector origin, Vector direction) {
 			}
 
 			case PIXAR_RAYTRACER_WALL: {
-				float incidence = benchmark_pixar_raytracer_modulus(normal, lightDirection),
+				float
+					incidence = benchmark_pixar_raytracer_modulus(normal, lightDirection),
 					p = 6.283185f * benchmark_pixar_raytracer_random(),
 					c = benchmark_pixar_raytracer_random(),
 					s = sqrtf(1.0f - c),
