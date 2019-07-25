@@ -430,11 +430,12 @@ static int benchmark_pixar_raytracer_ray_marching(Vector origin, Vector directio
 }
 
 static Vector benchmark_pixar_raytracer_trace(Vector origin, Vector direction) {
-	Vector sampledPosition = { 1.0f, 1.0f, 1.0f };
-	Vector normal = { 1.0f, 1.0f, 1.0f };
-	Vector color = { 1.0f, 1.0f, 1.0f };
-	Vector attenuation = { 1.0f, 1.0f, 1.0f };
-	Vector lightDirection = benchmark_pixar_raytracer_inverse((Vector){ 0.6f, 0.6f, 1.0f });
+	Vector
+		sampledPosition = { 1.0f, 1.0f, 1.0f },
+		normal = { 1.0f, 1.0f, 1.0f },
+		color = { 1.0f, 1.0f, 1.0f },
+		attenuation = { 1.0f, 1.0f, 1.0f },
+		lightDirection = benchmark_pixar_raytracer_inverse((Vector){ 0.6f, 0.6f, 1.0f });
 
 	for (int bounceCount = 3; bounceCount > 0; bounceCount--) {
 		int hitType = benchmark_pixar_raytracer_ray_marching(origin, direction, &sampledPosition, &normal);
@@ -452,13 +453,13 @@ static Vector benchmark_pixar_raytracer_trace(Vector origin, Vector direction) {
 			}
 
 			case PIXAR_RAYTRACER_WALL: {
-				float incidence = benchmark_pixar_raytracer_modulus(normal, lightDirection);
-				float p = 6.283185f * benchmark_pixar_raytracer_random();
-				float c = benchmark_pixar_raytracer_random();
-				float s = sqrtf(1.0f - c);
-				float g = normal.z < 0 ? -1.0f : 1.0f;
-				float u = -1.0f / (g + normal.z);
-				float v = normal.x * normal.y * u;
+				float incidence = benchmark_pixar_raytracer_modulus(normal, lightDirection),
+					p = 6.283185f * benchmark_pixar_raytracer_random(),
+					c = benchmark_pixar_raytracer_random(),
+					s = sqrtf(1.0f - c),
+					g = normal.z < 0 ? -1.0f : 1.0f,
+					u = -1.0f / (g + normal.z),
+					v = normal.x * normal.y * u;
 
 				direction = benchmark_pixar_raytracer_add(benchmark_pixar_raytracer_add((Vector){ v, g + normal.y * normal.y * u, -normal.y * (cosf(p) * s) }, (Vector){ 1.0f + g * normal.x * normal.x * u, g * v, -g * normal.x }), benchmark_pixar_raytracer_multiply_float(normal, sqrtf(c)));
 				origin = benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(sampledPosition, direction), 0.1f);

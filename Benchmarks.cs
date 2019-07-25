@@ -584,11 +584,12 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		private Vector Trace(Vector origin, Vector direction) {
-			Vector sampledPosition = new Vector { x = 1.0f, y = 1.0f, z = 1.0f };
-			Vector normal = new Vector { x = 1.0f, y = 1.0f, z = 1.0f };
-			Vector color = new Vector { x = 1.0f, y = 1.0f, z = 1.0f };
-			Vector attenuation = new Vector { x = 1.0f, y = 1.0f, z = 1.0f };
-			Vector lightDirection = Inverse(new Vector { x = 0.6f, y = 0.6f, z = 1.0f });
+			Vector
+				sampledPosition = new Vector { x = 1.0f, y = 1.0f, z = 1.0f },
+				normal = new Vector { x = 1.0f, y = 1.0f, z = 1.0f },
+				color = new Vector { x = 1.0f, y = 1.0f, z = 1.0f },
+				attenuation = new Vector { x = 1.0f, y = 1.0f, z = 1.0f },
+				lightDirection = Inverse(new Vector { x = 0.6f, y = 0.6f, z = 1.0f });
 
 			for (int bounceCount = 3; bounceCount > 0; bounceCount--) {
 				Hit hitType = (Hit)RayMarching(origin, direction, &sampledPosition, &normal);
@@ -606,13 +607,14 @@ public class Benchmarks : JobComponentSystem {
 					}
 
 					case Hit.Wall: {
-						float incidence = Modulus(normal, lightDirection);
-						float p = 6.283185f * Random();
-						float c = Random();
-						float s = math.sqrt(1.0f - c);
-						float g = normal.z < 0 ? -1.0f : 1.0f;
-						float u = -1.0f / (g + normal.z);
-						float v = normal.x * normal.y * u;
+						float
+							incidence = Modulus(normal, lightDirection),
+							p = 6.283185f * Random(),
+							c = Random(),
+							s = math.sqrt(1.0f - c),
+							g = normal.z < 0 ? -1.0f : 1.0f,
+							u = -1.0f / (g + normal.z),
+							v = normal.x * normal.y * u;
 
 						direction = Add(Add(new Vector { x = v, y = g + normal.y * normal.y * u, z = -normal.y * (math.cos(p) * s) }, new Vector { x = 1.0f + g * normal.x * normal.x * u, y = g * v, z = -g * normal.x }), MultiplyFloat(normal, math.sqrt(c)));
 						origin = MultiplyFloat(Add(sampledPosition, direction), 0.1f);
