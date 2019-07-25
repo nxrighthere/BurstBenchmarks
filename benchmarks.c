@@ -358,7 +358,7 @@ static float benchmark_pixar_raytracer_sample(Vector position, int* hitType) {
 	f.z = 0.0f;
 
 	for (int i = 0; i < size; i += 4) {
-		Vector begin = benchmark_pixar_raytracer_multiply_float((Vector){ letters[i] - 79.0f, letters[i - 1] - 79.0f, 0.0f }, 0.5f);
+		Vector begin = benchmark_pixar_raytracer_multiply_float((Vector){ letters[i] - 79.0f, letters[i + 1] - 79.0f, 0.0f }, 0.5f);
 		Vector e = benchmark_pixar_raytracer_add(benchmark_pixar_raytracer_multiply_float((Vector){ letters[i + 2] - 79.0f, letters[i + 3] - 79.0f, 0.0f }, 0.5f), benchmark_pixar_raytracer_multiply_float(begin, -1.0f));
 		Vector o = benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(f, benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(begin, e), benchmark_pixar_raytracer_min(-benchmark_pixar_raytracer_min(benchmark_pixar_raytracer_modulus(benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(begin, f), -1.0f), e) / benchmark_pixar_raytracer_modulus_self(e), 0.0f), 1.0f))), -1.0f);
 

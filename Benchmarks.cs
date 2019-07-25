@@ -127,7 +127,7 @@ public class Benchmarks : JobComponentSystem {
 			Energy(sun, end);
 
 			while (advancements-- > 0) {
-				Advance(sun, end, 0.01d);
+				Advance(sun, end, 0.01);
 			}
 
 			Energy(sun, end);
@@ -512,7 +512,7 @@ public class Benchmarks : JobComponentSystem {
 			f.z = 0.0f;
 
 			for (int i = 0; i < size; i += 4) {
-				Vector begin = MultiplyFloat(new Vector { x = letters[i] - 79.0f, y = letters[i - 1] - 79.0f, z = 0.0f }, 0.5f);
+				Vector begin = MultiplyFloat(new Vector { x = letters[i] - 79.0f, y = letters[i + 1] - 79.0f, z = 0.0f }, 0.5f);
 				Vector e = Add(MultiplyFloat(new Vector { x = letters[i + 2] - 79.0f, y = letters[i + 3] - 79.0f, z = 0.0f }, 0.5f), MultiplyFloat(begin, -1.0f));
 				Vector o = MultiplyFloat(Add(f, MultiplyFloat(Add(begin, e), Min(-Min(Modulus(MultiplyFloat(Add(begin, f), -1.0f), e) / ModulusSelf(e), 0.0f), 1.0f))), -1.0f);
 
@@ -662,204 +662,6 @@ public class Benchmarks : JobComponentSystem {
 		uint pixarRaytracer = 16;
 
 		{
-			var fibonacciBurst = new FibonacciBurst {
-				number = fibonacci
-			};
-
-			stopwatch.Stop();
-			fibonacciBurst.Run();
-
-			stopwatch.Restart();
-			fibonacciBurst.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Burst) Fibonacci: " + time + " ticks");
-		}
-
-		{
-			var fibonacciGCC = new FibonacciGCC {
-				number = fibonacci
-			};
-
-			stopwatch.Stop();
-			fibonacciGCC.Run();
-
-			stopwatch.Restart();
-			fibonacciGCC.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(GCC) Fibonacci: " + time + " ticks");
-		}
-
-		{
-			var fibonacciMono = new FibonacciBurst {
-				number = fibonacci
-			};
-
-			stopwatch.Stop();
-			fibonacciMono.Execute();
-
-			stopwatch.Restart();
-			fibonacciMono.Execute();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Mono JIT) Fibonacci: " + time + " ticks");
-		}
-
-		{
-			var mandelbrotBurst = new MandelbrotBurst {
-				width = 1920,
-				height = 1080,
-				iterations = mandelbrot
-			};
-
-			stopwatch.Stop();
-			mandelbrotBurst.Run();
-
-			stopwatch.Restart();
-			mandelbrotBurst.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Burst) Mandelbrot: " + time + " ticks");
-		}
-
-		{
-			var mandelbrotGCC = new MandelbrotGCC {
-				width = 1920,
-				height = 1080,
-				iterations = mandelbrot
-			};
-
-			stopwatch.Stop();
-			mandelbrotGCC.Run();
-
-			stopwatch.Restart();
-			mandelbrotGCC.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(GCC) Mandelbrot: " + time + " ticks");
-		}
-
-		{
-			var mandelbrotMono = new MandelbrotBurst {
-				width = 1920,
-				height = 1080,
-				iterations = mandelbrot
-			};
-
-			stopwatch.Stop();
-			mandelbrotMono.Execute();
-
-			stopwatch.Restart();
-			mandelbrotMono.Execute();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Mono JIT) Mandelbrot: " + time + " ticks");
-		}
-
-		{
-			var nbodyBurst = new NBodyBurst {
-				advancements = nbody
-			};
-
-			stopwatch.Stop();
-			nbodyBurst.Run();
-
-			stopwatch.Restart();
-			nbodyBurst.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Burst) NBody: " + time + " ticks");
-		}
-
-		{
-			var nbodyGCC = new NBodyGCC {
-				advancements = nbody
-			};
-
-			stopwatch.Stop();
-			nbodyGCC.Run();
-
-			stopwatch.Restart();
-			nbodyGCC.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(GCC) NBody: " + time + " ticks");
-		}
-
-		{
-			var nbodyMono = new NBodyBurst {
-				advancements = nbody
-			};
-
-			stopwatch.Stop();
-			nbodyMono.Execute();
-
-			stopwatch.Restart();
-			nbodyMono.Execute();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Mono JIT) NBody: " + time + " ticks");
-		}
-
-		{
-			var sieveOfEratosthenesBurst = new SieveOfEratosthenesBurst {
-				iterations = sieveOfEratosthenes
-			};
-
-			stopwatch.Stop();
-			sieveOfEratosthenesBurst.Run();
-
-			stopwatch.Restart();
-			sieveOfEratosthenesBurst.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Burst) Sieve of Eratosthenes: " + time + " ticks");
-		}
-
-		{
-			var sieveOfEratosthenesGCC = new SieveOfEratosthenesGCC {
-				iterations = sieveOfEratosthenes
-			};
-
-			stopwatch.Stop();
-			sieveOfEratosthenesGCC.Run();
-
-			stopwatch.Restart();
-			sieveOfEratosthenesGCC.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(GCC) Sieve of Eratosthenes: " + time + " ticks");
-		}
-
-		{
-			var sieveOfEratosthenesMono = new SieveOfEratosthenesBurst {
-				iterations = sieveOfEratosthenes
-			};
-
-			stopwatch.Stop();
-			sieveOfEratosthenesMono.Execute();
-
-			stopwatch.Restart();
-			sieveOfEratosthenesMono.Execute();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Mono JIT) Sieve of Eratosthenes: " + time + " ticks");
-		}
-
-		{
 			var pixarRaytracerBurst = new PixarRaytracerBurst {
 				width = 720,
 				height = 480,
@@ -875,42 +677,6 @@ public class Benchmarks : JobComponentSystem {
 			time = stopwatch.ElapsedTicks;
 
 			Debug.Log("(Burst) Pixar Raytracer: " + time + " ticks");
-		}
-
-		{
-			var pixarRaytracerGCC = new PixarRaytracerGCC {
-				width = 720,
-				height = 480,
-				samples = pixarRaytracer
-			};
-
-			stopwatch.Stop();
-			pixarRaytracerGCC.Run();
-
-			stopwatch.Restart();
-			pixarRaytracerGCC.Run();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(GCC) Pixar Raytracer: " + time + " ticks");
-		}
-
-		{
-			var pixarRaytracerMono = new PixarRaytracerBurst {
-				width = 720,
-				height = 480,
-				samples = pixarRaytracer
-			};
-
-			stopwatch.Stop();
-			pixarRaytracerMono.Execute();
-
-			stopwatch.Restart();
-			pixarRaytracerMono.Execute();
-
-			time = stopwatch.ElapsedTicks;
-
-			Debug.Log("(Mono JIT) Pixar Raytracer: " + time + " ticks");
 		}
 	}
 
