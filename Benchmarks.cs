@@ -489,7 +489,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		private float Sample(Vector position, int* hitType) {
-			const int size = 15 * 4;
+			const int size = 60;
 
 			float distance = 1e9f;
 			Vector f = position;

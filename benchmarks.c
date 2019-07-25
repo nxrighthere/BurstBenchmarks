@@ -335,7 +335,7 @@ inline static float benchmark_pixar_raytracer_random(void) {
 }
 
 static float benchmark_pixar_raytracer_sample(Vector position, int* hitType) {
-	const int size = 15 * 4;
+	const int size = 60;
 
 	float distance = 1e9f;
 	Vector f = position;
