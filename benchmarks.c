@@ -309,9 +309,9 @@ inline static Vector benchmark_pixar_raytracer_add_float(Vector vector, float va
 }
 
 inline static Vector benchmark_pixar_raytracer_cross(Vector to, Vector from) {
-	to.x *= from.z - to.z * from.y;
-	to.y *= from.x - to.x * from.z;
-	to.z *= from.y - to.y * from.x;
+	to.y *= from.z - to.z * from.y;
+	to.z *= from.x - to.x * from.z;
+	to.x *= from.y - to.y * from.x;
 
 	return to;
 }

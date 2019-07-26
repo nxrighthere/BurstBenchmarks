@@ -460,9 +460,9 @@ public class Benchmarks : JobComponentSystem {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private Vector Cross(Vector to, Vector from) {
-			to.x *= from.z - to.z * from.y;
-			to.y *= from.x - to.x * from.z;
-			to.z *= from.y - to.y * from.x;
+			to.y *= from.z - to.z * from.y;
+			to.z *= from.x - to.x * from.z;
+			to.x *= from.y - to.y * from.x;
 
 			return to;
 		}
