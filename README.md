@@ -1,8 +1,11 @@
 # BurstBenchmarks
-I was curious how well Burst optimizes C# code against GCC with C, so I ported four famous benchmarks and a raytracer with different workloads and made them identical between the two. C code compiled with all possible optimizations using `-DNDEBUG -Ofast -march=native -flto` compiler options. Benchmarks were done on Windows 10 w/ AMD FX-4300 (4GHz) using standalone build. Mono JIT is included for fun.
+I was curious how well Burst/IL2CPP optimizes C# code against GCC/Clang with C, so I ported four famous benchmarks and a raytracer with different workloads and made them identical between the two. C code compiled with all possible optimizations using `-DNDEBUG -Ofast -march=native -flto` compiler options. Benchmarks were done on Windows 10 w/ AMD FX-4300 (4GHz) using standalone build. Mono JIT is included for fun.
 
 Burst 1.1.1<br/>
-GCC 8.1.0
+GCC 8.1.0<br/>
+Clang (LLVM 8)<br/>
+IL2CPP and Mono (Unity 2019.1.11f1)
+
 
 |          | Fibonacci         | Mandelbrot        | NBody             | Sieve of Eratosthenes | Pixar Raytracer     |
 |----------|-------------------|-------------------|-------------------|-----------------------|----------------------
