@@ -255,12 +255,12 @@ typedef struct _Vector {
 	float x, y, z;
 } Vector;
 
-typedef enum _Hit {
+typedef enum _PixarRayHit {
 	PIXAR_RAYTRACER_NONE = 0,
 	PIXAR_RAYTRACER_LETTER = 1,
 	PIXAR_RAYTRACER_WALL = 2,
 	PIXAR_RAYTRACER_SUN = 3
-} Hit;
+} PixarRayHit;
 
 static uint32_t marsagliaZ, marsagliaW;
 
@@ -437,7 +437,7 @@ static Vector benchmark_pixar_raytracer_trace(Vector origin, Vector direction) {
 		attenuation = { 1.0f, 1.0f, 1.0f },
 		lightDirection = benchmark_pixar_raytracer_inverse((Vector){ 0.6f, 0.6f, 1.0f });
 
-	for (int bounceCount = 3; bounceCount > 0; bounceCount--) {
+	for (int bounce = 3; bounce > 0; bounce--) {
 		int hitType = benchmark_pixar_raytracer_ray_marching(origin, direction, &sampledPosition, &normal);
 
 		switch (hitType) {
@@ -500,7 +500,7 @@ EXPORT float benchmark_pixar_raytracer(uint32_t width, uint32_t height, uint32_t
 
 	Vector up = benchmark_pixar_raytracer_cross(goal, left);
 	Vector color = { 0 };
-	Vector o = { 0 };
+	Vector adjust = { 0 };
 
 	for (uint32_t y = height; y > 0; y--) {
 		for (uint32_t x = width; x > 0; x--) {
@@ -511,9 +511,9 @@ EXPORT float benchmark_pixar_raytracer(uint32_t width, uint32_t height, uint32_t
 			color = benchmark_pixar_raytracer_multiply_float(color, (1.0f / samples) + 14.0f / 241.0f);
 			o = benchmark_pixar_raytracer_add_float(color, 1.0f);
 			color = (Vector){
-				color.x / o.x,
-				color.y / o.y,
-				color.z / o.z
+				color.x / adjust.x,
+				color.y / adjust.y,
+				color.z / adjust.z
 			};
 
 			color = benchmark_pixar_raytracer_multiply_float(color, 255.0f);

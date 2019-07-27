@@ -349,7 +349,7 @@ public class Benchmarks : JobComponentSystem {
 		public float x, y, z;
 	}
 
-	public enum Hit {
+	public enum PixarRayHit {
 		None = 0,
 		Letter = 1,
 		Wall = 2,
@@ -384,7 +384,7 @@ public class Benchmarks : JobComponentSystem {
 
 			Vector up = Cross(goal, left);
 			Vector color = default(Vector);
-			Vector o = default(Vector);
+			Vector adjust = default(Vector);
 
 			for (uint y = height; y > 0; y--) {
 				for (uint x = width; x > 0; x--) {
@@ -393,11 +393,11 @@ public class Benchmarks : JobComponentSystem {
 					}
 
 					color = MultiplyFloat(color, (1.0f / samples) + 14.0f / 241.0f);
-					o = AddFloat(color, 1.0f);
+					adjust = AddFloat(color, 1.0f);
 					color = new Vector {
-						x = color.x / o.x,
-						y = color.y / o.y,
-						z = color.z / o.z
+						x = color.x / adjust.x,
+						y = color.y / adjust.y,
+						z = color.z / adjust.z
 					};
 
 					color = MultiplyFloat(color, 255.0f);
@@ -545,27 +545,27 @@ public class Benchmarks : JobComponentSystem {
 			}
 
 			distance = math.pow(math.pow(distance, 8.0f) + math.pow(position.z, 8.0f), 0.125f) - 0.5f;
-			*hitType = (int)Hit.Letter;
+			*hitType = (int)PixarRayHit.Letter;
 
 			float roomDistance = Min(-Min(BoxTest(position, new Vector { x = -30.0f, y = -0.5f, z = -30.0f }, new Vector { x = 30.0f, y = 18.0f, z = 30.0f }), BoxTest(position, new Vector { x = -25.0f, y = -17.5f, z = -25.0f }, new Vector { x = 25.0f, y = 20.0f, z = 25.0f })), BoxTest( new Vector { x = math.fmod(math.abs(position.x), 8), y = position.y, z = position.z }, new Vector { x = 1.5f, y = 18.5f, z = -25.0f }, new Vector { x = 6.5f, y = 20.0f, z = 25.0f }));
 
 			if (roomDistance < distance) {
 				distance = roomDistance;
-				*hitType = (int)Hit.Wall;
+				*hitType = (int)PixarRayHit.Wall;
 			}
 
 			float sun = 19.9f - position.y;
 
 			if (sun < distance) {
 				distance = sun;
-				*hitType = (int)Hit.Sun;
+				*hitType = (int)PixarRayHit.Sun;
 			}
 
 			return distance;
 		}
 
 		private int RayMarching(Vector origin, Vector direction, Vector* hitPosition, Vector* hitNormal) {
-			int hitType = (int)Hit.None;
+			int hitType = (int)PixarRayHit.None;
 			int noHitCount = 0;
 			float distance = 0.0f;
 
@@ -580,7 +580,7 @@ public class Benchmarks : JobComponentSystem {
 				}
 			}
 
-			return (int)Hit.None;
+			return (int)PixarRayHit.None;
 		}
 
 		private Vector Trace(Vector origin, Vector direction) {
@@ -591,14 +591,14 @@ public class Benchmarks : JobComponentSystem {
 				attenuation = new Vector { x = 1.0f, y = 1.0f, z = 1.0f },
 				lightDirection = Inverse(new Vector { x = 0.6f, y = 0.6f, z = 1.0f });
 
-			for (int bounceCount = 3; bounceCount > 0; bounceCount--) {
-				Hit hitType = (Hit)RayMarching(origin, direction, &sampledPosition, &normal);
+			for (int bounce = 3; bounce > 0; bounce--) {
+				PixarRayHit hitType = (PixarRayHit)RayMarching(origin, direction, &sampledPosition, &normal);
 
 				switch (hitType) {
-					case Hit.None:
+					case PixarRayHit.None:
 						break;
 
-					case Hit.Letter: {
+					case PixarRayHit.Letter: {
 						direction = MultiplyFloat(Add(direction, normal), Modulus(normal, direction) * -2.0f);
 						origin = MultiplyFloat(Add(sampledPosition, direction), 0.1f);
 						attenuation = MultiplyFloat(attenuation, 0.2f);
@@ -606,7 +606,7 @@ public class Benchmarks : JobComponentSystem {
 						break;
 					}
 
-					case Hit.Wall: {
+					case PixarRayHit.Wall: {
 						float
 							incidence = Modulus(normal, lightDirection),
 							p = 6.283185f * Random(),
@@ -620,13 +620,13 @@ public class Benchmarks : JobComponentSystem {
 						origin = MultiplyFloat(Add(sampledPosition, direction), 0.1f);
 						attenuation = MultiplyFloat(attenuation, 0.2f);
 
-						if (incidence > 0 && RayMarching(MultiplyFloat(Add(sampledPosition, normal), 0.1f), lightDirection, &sampledPosition, &normal) == (int)Hit.Sun)
+						if (incidence > 0 && RayMarching(MultiplyFloat(Add(sampledPosition, normal), 0.1f), lightDirection, &sampledPosition, &normal) == (int)PixarRayHit.Sun)
 							color = MultiplyFloat(Multiply(Add(color, attenuation), new Vector { x = 500.0f, y = 400.0f, z = 100.0f }), incidence);
 
 						break;
 					}
 
-					case Hit.Sun: {
+					case PixarRayHit.Sun: {
 						color = Multiply(Add(color, attenuation), new Vector { x = 50.0f, y = 80.0f, z = 100.0f });
 
 						goto escape;
