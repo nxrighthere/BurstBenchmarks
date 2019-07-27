@@ -509,7 +509,7 @@ EXPORT float benchmark_pixar_raytracer(uint32_t width, uint32_t height, uint32_t
 			}
 
 			color = benchmark_pixar_raytracer_multiply_float(color, (1.0f / samples) + 14.0f / 241.0f);
-			o = benchmark_pixar_raytracer_add_float(color, 1.0f);
+			adjust = benchmark_pixar_raytracer_add_float(color, 1.0f);
 			color = (Vector){
 				color.x / adjust.x,
 				color.y / adjust.y,
