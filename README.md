@@ -1,5 +1,5 @@
 # BurstBenchmarks
-I was curious how well Burst/IL2CPP optimizes C# code against GCC/Clang with C, so I ported four famous benchmarks plus a raytracer with different workloads and made them identical between the two languages. C code compiled with all possible optimizations using `-DNDEBUG -Ofast -march=native -flto` compiler options. Benchmarks were done on Windows 10 w/ AMD FX-4300 (4GHz) using standalone build. Mono JIT is included for fun.
+I was curious how well Burst/IL2CPP optimizes C# code against GCC/Clang with C, so I ported four famous benchmarks, a raytracer, a minified flocking simulation, with different workloads and made them identical between the two languages. C code compiled with all possible optimizations using `-DNDEBUG -Ofast -march=native -flto` compiler options. Benchmarks were done on Windows 10 w/ AMD FX-4300 (4GHz) using standalone build. Mono JIT is included for fun.
 
 Burst 1.1.1<br/>
 GCC 8.1.0<br/>
@@ -18,13 +18,13 @@ IL2CPP and Mono (Unity 2019.1.11f1)
 
 ## Single-precision math
 
-|          | Mandelbrot        | Pixar Raytracer     |
-|----------|-------------------|---------------------|
-| Burst    | 38,096,272 ticks  | 238,603,517 ticks   |
-| GCC      | 28,831,784 ticks  | 70,737,868 ticks    |
-| Clang    | 40,857,282 ticks  | 88,329,427 ticks    |
-| IL2CPP   | 112,912,355 ticks | 316,060,369 ticks   |
-| Mono JIT | 122,758,625 ticks | 1,386,450,841 ticks |
+|          | Mandelbrot        | Pixar Raytracer     | Fireflies Flocking  |
+|----------|-------------------|---------------------|---------------------|
+| Burst    | 38,096,272 ticks  | 238,603,517 ticks   | 193,240,411 ticks   |
+| GCC      | 28,831,784 ticks  | 70,737,868 ticks    | 159,421,517 ticks   |
+| Clang    | 40,857,282 ticks  | 88,329,427 ticks    | 154,709,425 ticks   |
+| IL2CPP   | 112,912,355 ticks | 316,060,369 ticks   | 1,015,722,830 ticks |
+| Mono JIT | 122,758,625 ticks | 1,386,450,841 ticks | 983,441,727 ticks   |
 
 ## Double-precision math
 
