@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
+#include <mm_malloc.h>
 
 #ifdef _WIN32
 	#define EXPORT __declspec(dllexport)
@@ -521,4 +522,177 @@ EXPORT float benchmark_pixar_raytracer(uint32_t width, uint32_t height, uint32_t
 	}
 
 	return color.x + color.y + color.z;
+}
+
+// Fireflies Flocking
+
+typedef struct _Boid {
+	Vector position, velocity, acceleration;
+} Boid;
+
+static uint32_t parkMiller;
+static float maxSpeed;
+static float maxForce;
+static float separationDistance;
+static float neighbourDistance;
+
+inline static void benchmark_fireflies_flocking_add(Vector* left, const Vector* right) {
+	left->x += right->x;
+	left->y += right->y;
+	left->z += right->z;
+}
+
+inline static void benchmark_fireflies_flocking_subtract(Vector* left, const Vector* right) {
+	left->x -= right->x;
+	left->y -= right->y;
+	left->z -= right->z;
+}
+
+inline static void benchmark_fireflies_flocking_divide(Vector* vector, float value) {
+	vector->x /= value;
+	vector->y /= value;
+	vector->z /= value;
+}
+
+inline static void benchmark_fireflies_flocking_multiply(Vector* vector, float value) {
+	vector->x *= value;
+	vector->y *= value;
+	vector->z *= value;
+}
+
+inline static void benchmark_fireflies_flocking_normalize(Vector* vector) {
+	vector->x = sqrtf(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
+	vector->y = sqrtf(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
+	vector->z = sqrtf(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
+}
+
+inline static float benchmark_fireflies_flocking_length(Vector* velocity) {
+	return sqrtf(velocity->x * 2.0f + velocity->y * 2.0f + velocity->z * 2.0f);
+}
+
+inline static float benchmark_fireflies_flocking_random(void) {
+	parkMiller = (uint32_t)(((uint64_t)parkMiller * 48271u) % 0x7fffffff);
+
+	return (parkMiller + 1.0f) * 3.141592653589793f;
+}
+
+EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
+	parkMiller = 666;
+	maxSpeed = 1.0f;
+	maxForce = 0.03f;
+	separationDistance = 15.0f;
+	neighbourDistance = 30.0f;
+
+	Boid* fireflies = (Boid*)_mm_malloc(boids * sizeof(Boid), 16);
+
+	for (int i = 0; i < boids; ++i) {
+		fireflies[i].position = (Vector){ benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
+		fireflies[i].velocity = (Vector){ benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
+		fireflies[i].acceleration = (Vector){ 0.0f, 0.0f, 0.0f };
+	}
+
+	for (int i = 0; i < lifetime; ++i) {
+		// Update
+		for (int boid = 0; boid < boids; ++boid) {
+			benchmark_fireflies_flocking_add(&fireflies[boid].velocity, &fireflies[boid].acceleration);
+
+			if (benchmark_fireflies_flocking_length(&fireflies[boid].velocity) > maxSpeed) {
+				benchmark_fireflies_flocking_divide(&fireflies[boid].velocity, benchmark_fireflies_flocking_length(&fireflies[i].velocity));
+				benchmark_fireflies_flocking_multiply(&fireflies[boid].velocity, maxSpeed);
+			}
+
+			benchmark_fireflies_flocking_add(&fireflies[boid].position, &fireflies[boid].velocity);
+			benchmark_fireflies_flocking_multiply(&fireflies[boid].acceleration, maxSpeed);
+		}
+
+		// Separation
+		for (int boid = 0; boid < boids; ++boid) {
+			Vector separation = { 0 };
+			int count = 0;
+
+			for (int target = 0; target < boids; ++target) {
+				Vector position = fireflies[boid].position;
+
+				benchmark_fireflies_flocking_subtract(&position, &fireflies[target].position);
+
+				float distance = benchmark_fireflies_flocking_length(&position);
+
+				if (distance > 0.0f && distance < separationDistance) {
+					benchmark_fireflies_flocking_normalize(&position);
+					benchmark_fireflies_flocking_divide(&position, distance);
+
+					separation = (Vector){ 0.0f, 0.0f, 0.0f };
+
+					benchmark_fireflies_flocking_add(&separation, &position);
+
+					count++;
+				}
+			}
+
+			if (count > 0)
+				benchmark_fireflies_flocking_divide(&separation, (float)count);
+
+			if (benchmark_fireflies_flocking_length(&separation) > 0.0f) {
+				benchmark_fireflies_flocking_normalize(&separation);
+				benchmark_fireflies_flocking_multiply(&separation, maxSpeed);
+				benchmark_fireflies_flocking_subtract(&separation, &fireflies[boid].velocity);
+
+				float force = benchmark_fireflies_flocking_length(&separation);
+
+				if (force > maxForce) {
+					benchmark_fireflies_flocking_divide(&separation, force);
+					benchmark_fireflies_flocking_multiply(&separation, maxForce);
+				}
+			}
+
+			benchmark_fireflies_flocking_multiply(&separation, 1.5f);
+
+			fireflies[boid].acceleration = separation;
+		}
+
+		// Cohesion
+		for (int boid = 0; boid < boids; ++boid) {
+			Vector cohesion = { 0 };
+			int count = 0;
+
+			for (int target = 0; target < boids; ++target) {
+				Vector position = fireflies[boid].position;
+
+				benchmark_fireflies_flocking_subtract(&position, &fireflies[target].position);
+
+				float distance = benchmark_fireflies_flocking_length(&position);
+
+				if (distance > 0.0f && distance < neighbourDistance) {
+					cohesion = (Vector){ 0.0f, 0.0f, 0.0f };
+
+					benchmark_fireflies_flocking_add(&cohesion, &position);
+
+					count++;
+				}
+			}
+
+			if (count > 0)
+				benchmark_fireflies_flocking_divide(&cohesion, (float)count);
+
+			if (benchmark_fireflies_flocking_length(&cohesion) > 0.0f) {
+				benchmark_fireflies_flocking_subtract(&cohesion, &fireflies[boid].position);
+				benchmark_fireflies_flocking_normalize(&cohesion);
+				benchmark_fireflies_flocking_multiply(&cohesion, maxSpeed);
+				benchmark_fireflies_flocking_subtract(&cohesion, &fireflies[boid].velocity);
+
+				float force = benchmark_fireflies_flocking_length(&cohesion);
+
+				if (force > maxForce) {
+					benchmark_fireflies_flocking_divide(&cohesion, force);
+					benchmark_fireflies_flocking_multiply(&cohesion, maxForce);
+				}
+			}
+
+			fireflies[boid].acceleration = cohesion;
+		}
+	}
+
+	_mm_free(fireflies);
+
+	return parkMiller;
 }

@@ -2,6 +2,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Unity.Burst;
+using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -652,14 +654,218 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
+	// Fireflies Flocking
+
+	private struct Boid {
+		public Vector position, velocity, acceleration;
+	}
+
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
+	private unsafe struct FirefliesFlockingBurst : IJob {
+		public uint boids;
+		public uint lifetime;
+		public float result;
+
+		public void Execute() {
+			result = FirefliesFlocking(boids, lifetime);
+		}
+
+		private uint parkMiller;
+		private float maxSpeed;
+		private float maxForce;
+		private float separationDistance;
+		private float neighbourDistance;
+
+		private float FirefliesFlocking(uint boids, uint lifetime) {
+			parkMiller = 666;
+			maxSpeed = 1.0f;
+			maxForce = 0.03f;
+			separationDistance = 15.0f;
+			neighbourDistance = 30.0f;
+
+			Boid* fireflies = (Boid*)UnsafeUtility.Malloc(boids * sizeof(Boid), 16, Allocator.Persistent);
+
+			for (int i = 0; i < boids; ++i) {
+				fireflies[i].position = new Vector { x = Random(), y = Random(), z = Random() };
+				fireflies[i].velocity = new Vector { x = Random(), y = Random(), z = Random() };
+				fireflies[i].acceleration = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
+			}
+
+			for (int i = 0; i < lifetime; ++i) {
+				// Update
+				for (int boid = 0; boid < boids; ++boid) {
+					Add(&fireflies[boid].velocity, &fireflies[boid].acceleration);
+
+					if (Length(&fireflies[boid].velocity) > maxSpeed) {
+						Divide(&fireflies[boid].velocity, Length(&fireflies[i].velocity));
+						Multiply(&fireflies[boid].velocity, maxSpeed);
+					}
+
+					Add(&fireflies[boid].position, &fireflies[boid].velocity);
+					Multiply(&fireflies[boid].acceleration, maxSpeed);
+				}
+
+				// Separation
+				for (int boid = 0; boid < boids; ++boid) {
+					Vector separation = default(Vector);
+					int count = 0;
+
+					for (int target = 0; target < boids; ++target) {
+						Vector position = fireflies[boid].position;
+
+						Subtract(&position, &fireflies[target].position);
+
+						float distance = Length(&position);
+
+						if (distance > 0.0f && distance < separationDistance) {
+							Normalize(&position);
+							Divide(&position, distance);
+
+							separation = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
+
+							Add(&separation, &position);
+
+							count++;
+						}
+					}
+
+					if (count > 0)
+						Divide(&separation, (float)count);
+
+					if (Length(&separation) > 0.0f) {
+						Normalize(&separation);
+						Multiply(&separation, maxSpeed);
+						Subtract(&separation, &fireflies[boid].velocity);
+
+						float force = Length(&separation);
+
+						if (force > maxForce) {
+							Divide(&separation, force);
+							Multiply(&separation, maxForce);
+						}
+					}
+
+					Multiply(&separation, 1.5f);
+
+					fireflies[boid].acceleration = separation;
+				}
+
+				// Cohesion
+				for (int boid = 0; boid < boids; ++boid) {
+					Vector cohesion = default(Vector);
+					int count = 0;
+
+					for (int target = 0; target < boids; ++target) {
+						Vector position = fireflies[boid].position;
+
+						Subtract(&position, &fireflies[target].position);
+
+						float distance = Length(&position);
+
+						if (distance > 0.0f && distance < neighbourDistance) {
+							cohesion = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
+
+							Add(&cohesion, &position);
+
+							count++;
+						}
+					}
+
+					if (count > 0)
+						Divide(&cohesion, (float)count);
+
+					if (Length(&cohesion) > 0.0f) {
+						Subtract(&cohesion, &fireflies[boid].position);
+						Normalize(&cohesion);
+						Multiply(&cohesion, maxSpeed);
+						Subtract(&cohesion, &fireflies[boid].velocity);
+
+						float force = Length(&cohesion);
+
+						if (force > maxForce) {
+							Divide(&cohesion, force);
+							Multiply(&cohesion, maxForce);
+						}
+					}
+
+					fireflies[boid].acceleration = cohesion;
+				}
+			}
+
+			UnsafeUtility.Free(fireflies, Allocator.Persistent);
+
+			return parkMiller;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void Add(Vector* left, Vector* right) {
+			left->x += right->x;
+			left->y += right->y;
+			left->z += right->z;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void Subtract(Vector* left, Vector* right) {
+			left->x -= right->x;
+			left->y -= right->y;
+			left->z -= right->z;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void Divide(Vector* vector, float value) {
+			vector->x /= value;
+			vector->y /= value;
+			vector->z /= value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void Multiply(Vector* vector, float value) {
+			vector->x *= value;
+			vector->y *= value;
+			vector->z *= value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void Normalize(Vector* vector) {
+			vector->x = math.sqrt(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
+			vector->y = math.sqrt(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
+			vector->z = math.sqrt(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private float Length(Vector* velocity) {
+			return math.sqrt(velocity->x * 2.0f + velocity->y * 2.0f + velocity->z * 2.0f);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private float Random() {
+			parkMiller = (uint)(((ulong)parkMiller * 48271u) % 0x7fffffff);
+
+			return (parkMiller + 1.0f) * 3.141592653589793f;
+		}
+	}
+
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
+	private unsafe struct FirefliesFlockingGCC : IJob {
+		public uint boids;
+		public uint lifetime;
+		public float result;
+
+		public void Execute() {
+			result = benchmark_fireflies_flocking(boids, lifetime);
+		}
+	}
+
 	protected override void OnCreate() {
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		long time = 0;
+
 		uint fibonacci = 46;
 		uint mandelbrot = 8;
 		uint nbody = 100000000;
 		uint sieveOfEratosthenes = 1000000;
 		uint pixarRaytracer = 16;
+		uint firefliesFlocking = 1000;
 
 		{
 			var fibonacciBurst = new FibonacciBurst {
@@ -912,6 +1118,57 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono JIT) Pixar Raytracer: " + time + " ticks");
 		}
+
+		{
+			var firefliesFlockingBurst = new FirefliesFlockingBurst {
+				boids = 1000,
+				lifetime = firefliesFlocking
+			};
+
+			stopwatch.Stop();
+			firefliesFlockingBurst.Run();
+
+			stopwatch.Restart();
+			firefliesFlockingBurst.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Burst) Fireflies Flocking: " + time + " ticks");
+		}
+
+		{
+			var firefliesFlockingGCC = new FirefliesFlockingGCC {
+				boids = 1000,
+				lifetime = firefliesFlocking
+			};
+
+			stopwatch.Stop();
+			firefliesFlockingGCC.Run();
+
+			stopwatch.Restart();
+			firefliesFlockingGCC.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(GCC) Fireflies Flocking: " + time + " ticks");
+		}
+
+		{
+			var firefliesFlockingMono = new FirefliesFlockingBurst {
+				boids = 1000,
+				lifetime = firefliesFlocking
+			};
+
+			stopwatch.Stop();
+			firefliesFlockingMono.Execute();
+
+			stopwatch.Restart();
+			firefliesFlockingMono.Execute();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Mono) Fireflies Flocking: " + time + " ticks");
+		}
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {
@@ -934,4 +1191,7 @@ public class Benchmarks : JobComponentSystem {
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
 	public static extern float benchmark_pixar_raytracer(uint width, uint height, uint samples);
+
+	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
+	public static extern float benchmark_fireflies_flocking(uint boids, uint lifetime);
 }
