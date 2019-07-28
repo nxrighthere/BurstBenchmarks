@@ -833,8 +833,8 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private float Length(Vector* velocity) {
-			return math.sqrt(velocity->x * 2.0f + velocity->y * 2.0f + velocity->z * 2.0f);
+		private float Length(Vector* vector) {
+			return math.sqrt(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
