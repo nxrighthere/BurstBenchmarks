@@ -746,8 +746,7 @@ public class Benchmarks : JobComponentSystem {
 					}
 
 					Multiply(&separation, 1.5f);
-
-					fireflies[boid].acceleration = separation;
+					Add(&fireflies[boid].acceleration, &separation);
 				}
 
 				// Cohesion
@@ -788,7 +787,7 @@ public class Benchmarks : JobComponentSystem {
 						}
 					}
 
-					fireflies[boid].acceleration = cohesion;
+					Add(&fireflies[boid].acceleration, &cohesion);
 				}
 			}
 

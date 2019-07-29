@@ -646,8 +646,7 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 			}
 
 			benchmark_fireflies_flocking_multiply(&separation, 1.5f);
-
-			fireflies[boid].acceleration = separation;
+			benchmark_fireflies_flocking_add(&fireflies[boid].acceleration, &separation);
 		}
 
 		// Cohesion
@@ -688,7 +687,7 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 				}
 			}
 
-			fireflies[boid].acceleration = cohesion;
+			benchmark_fireflies_flocking_add(&fireflies[boid].acceleration, &cohesion);
 		}
 	}
 
