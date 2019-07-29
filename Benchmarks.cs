@@ -358,7 +358,7 @@ public class Benchmarks : JobComponentSystem {
 		Sun = 3
 	}
 
-	[BurstCompile(CompileSynchronously = true)]
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
 	private unsafe struct PixarRaytracerBurst : IJob {
 		public uint width;
 		public uint height;
@@ -642,7 +642,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
-	[BurstCompile(CompileSynchronously = true)]
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
 	private unsafe struct PixarRaytracerGCC : IJob {
 		public uint width;
 		public uint height;
