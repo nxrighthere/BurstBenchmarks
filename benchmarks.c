@@ -573,7 +573,7 @@ inline static float benchmark_fireflies_flocking_length(Vector* vector) {
 inline static float benchmark_fireflies_flocking_random(void) {
 	parkMiller = (uint32_t)(((uint64_t)parkMiller * 48271u) % 0x7fffffff);
 
-	return (parkMiller + 1.0f) * 3.141592653589793f;
+	return parkMiller / 10000000.0f;
 }
 
 EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {

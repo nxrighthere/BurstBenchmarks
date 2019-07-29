@@ -840,7 +840,7 @@ public class Benchmarks : JobComponentSystem {
 		private float Random() {
 			parkMiller = (uint)(((ulong)parkMiller * 48271u) % 0x7fffffff);
 
-			return (parkMiller + 1.0f) * 3.141592653589793f;
+			return parkMiller / 10000000.0f;
 		}
 	}
 
