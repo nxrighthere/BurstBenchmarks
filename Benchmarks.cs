@@ -729,10 +729,8 @@ public class Benchmarks : JobComponentSystem {
 						}
 					}
 
-					if (count > 0)
+					if (count > 0) {
 						Divide(&separation, (float)count);
-
-					if (Length(&separation) > 0.0f) {
 						Normalize(&separation);
 						Multiply(&separation, maxSpeed);
 						Subtract(&separation, &fireflies[boid].velocity);
@@ -743,10 +741,10 @@ public class Benchmarks : JobComponentSystem {
 							Divide(&separation, force);
 							Multiply(&separation, maxForce);
 						}
-					}
 
-					Multiply(&separation, 1.5f);
-					Add(&fireflies[boid].acceleration, &separation);
+						Multiply(&separation, 1.5f);
+						Add(&fireflies[boid].acceleration, &separation);
+					}
 				}
 
 				// Cohesion
@@ -770,10 +768,8 @@ public class Benchmarks : JobComponentSystem {
 						}
 					}
 
-					if (count > 0)
+					if (count > 0) {
 						Divide(&cohesion, (float)count);
-
-					if (Length(&cohesion) > 0.0f) {
 						Subtract(&cohesion, &fireflies[boid].position);
 						Normalize(&cohesion);
 						Multiply(&cohesion, maxSpeed);
@@ -785,9 +781,9 @@ public class Benchmarks : JobComponentSystem {
 							Divide(&cohesion, force);
 							Multiply(&cohesion, maxForce);
 						}
-					}
 
-					Add(&fireflies[boid].acceleration, &cohesion);
+						Add(&fireflies[boid].acceleration, &cohesion);
+					}
 				}
 			}
 

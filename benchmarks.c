@@ -629,10 +629,8 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 				}
 			}
 
-			if (count > 0)
+			if (count > 0) {
 				benchmark_fireflies_flocking_divide(&separation, (float)count);
-
-			if (benchmark_fireflies_flocking_length(&separation) > 0.0f) {
 				benchmark_fireflies_flocking_normalize(&separation);
 				benchmark_fireflies_flocking_multiply(&separation, maxSpeed);
 				benchmark_fireflies_flocking_subtract(&separation, &fireflies[boid].velocity);
@@ -643,10 +641,10 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 					benchmark_fireflies_flocking_divide(&separation, force);
 					benchmark_fireflies_flocking_multiply(&separation, maxForce);
 				}
-			}
 
-			benchmark_fireflies_flocking_multiply(&separation, 1.5f);
-			benchmark_fireflies_flocking_add(&fireflies[boid].acceleration, &separation);
+				benchmark_fireflies_flocking_multiply(&separation, 1.5f);
+				benchmark_fireflies_flocking_add(&fireflies[boid].acceleration, &separation);
+			}
 		}
 
 		// Cohesion
@@ -670,10 +668,8 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 				}
 			}
 
-			if (count > 0)
+			if (count > 0) {
 				benchmark_fireflies_flocking_divide(&cohesion, (float)count);
-
-			if (benchmark_fireflies_flocking_length(&cohesion) > 0.0f) {
 				benchmark_fireflies_flocking_subtract(&cohesion, &fireflies[boid].position);
 				benchmark_fireflies_flocking_normalize(&cohesion);
 				benchmark_fireflies_flocking_multiply(&cohesion, maxSpeed);
@@ -685,9 +681,9 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 					benchmark_fireflies_flocking_divide(&cohesion, force);
 					benchmark_fireflies_flocking_multiply(&cohesion, maxForce);
 				}
-			}
 
-			benchmark_fireflies_flocking_add(&fireflies[boid].acceleration, &cohesion);
+				benchmark_fireflies_flocking_add(&fireflies[boid].acceleration, &cohesion);
+			}
 		}
 	}
 
