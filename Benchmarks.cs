@@ -868,15 +868,15 @@ public class Benchmarks : JobComponentSystem {
 		uint firefliesFlocking = 1000;
 
 		{
-			var fibonacciBurst = new FibonacciBurst {
+			var benchmark = new FibonacciBurst {
 				number = fibonacci
 			};
 
 			stopwatch.Stop();
-			fibonacciBurst.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			fibonacciBurst.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -884,15 +884,15 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var fibonacciGCC = new FibonacciGCC {
+			var benchmark = new FibonacciGCC {
 				number = fibonacci
 			};
 
 			stopwatch.Stop();
-			fibonacciGCC.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			fibonacciGCC.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -900,15 +900,15 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var fibonacciMono = new FibonacciBurst {
+			var benchmark = new FibonacciBurst {
 				number = fibonacci
 			};
 
 			stopwatch.Stop();
-			fibonacciMono.Execute();
+			benchmark.Execute();
 
 			stopwatch.Restart();
-			fibonacciMono.Execute();
+			benchmark.Execute();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -916,17 +916,17 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var mandelbrotBurst = new MandelbrotBurst {
+			var benchmark = new MandelbrotBurst {
 				width = 1920,
 				height = 1080,
 				iterations = mandelbrot
 			};
 
 			stopwatch.Stop();
-			mandelbrotBurst.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			mandelbrotBurst.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -934,17 +934,17 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var mandelbrotGCC = new MandelbrotGCC {
+			var benchmark = new MandelbrotGCC {
 				width = 1920,
 				height = 1080,
 				iterations = mandelbrot
 			};
 
 			stopwatch.Stop();
-			mandelbrotGCC.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			mandelbrotGCC.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -952,17 +952,17 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var mandelbrotMono = new MandelbrotBurst {
+			var benchmark = new MandelbrotBurst {
 				width = 1920,
 				height = 1080,
 				iterations = mandelbrot
 			};
 
 			stopwatch.Stop();
-			mandelbrotMono.Execute();
+			benchmark.Execute();
 
 			stopwatch.Restart();
-			mandelbrotMono.Execute();
+			benchmark.Execute();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -970,15 +970,15 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var nbodyBurst = new NBodyBurst {
+			var benchmark = new NBodyBurst {
 				advancements = nbody
 			};
 
 			stopwatch.Stop();
-			nbodyBurst.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			nbodyBurst.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -986,15 +986,15 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var nbodyGCC = new NBodyGCC {
+			var benchmark = new NBodyGCC {
 				advancements = nbody
 			};
 
 			stopwatch.Stop();
-			nbodyGCC.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			nbodyGCC.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1002,15 +1002,15 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var nbodyMono = new NBodyBurst {
+			var benchmark = new NBodyBurst {
 				advancements = nbody
 			};
 
 			stopwatch.Stop();
-			nbodyMono.Execute();
+			benchmark.Execute();
 
 			stopwatch.Restart();
-			nbodyMono.Execute();
+			benchmark.Execute();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1018,15 +1018,15 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var sieveOfEratosthenesBurst = new SieveOfEratosthenesBurst {
+			var benchmark = new SieveOfEratosthenesBurst {
 				iterations = sieveOfEratosthenes
 			};
 
 			stopwatch.Stop();
-			sieveOfEratosthenesBurst.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			sieveOfEratosthenesBurst.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1034,15 +1034,15 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var sieveOfEratosthenesGCC = new SieveOfEratosthenesGCC {
+			var benchmark = new SieveOfEratosthenesGCC {
 				iterations = sieveOfEratosthenes
 			};
 
 			stopwatch.Stop();
-			sieveOfEratosthenesGCC.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			sieveOfEratosthenesGCC.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1050,15 +1050,15 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var sieveOfEratosthenesMono = new SieveOfEratosthenesBurst {
+			var benchmark = new SieveOfEratosthenesBurst {
 				iterations = sieveOfEratosthenes
 			};
 
 			stopwatch.Stop();
-			sieveOfEratosthenesMono.Execute();
+			benchmark.Execute();
 
 			stopwatch.Restart();
-			sieveOfEratosthenesMono.Execute();
+			benchmark.Execute();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1066,17 +1066,17 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var pixarRaytracerBurst = new PixarRaytracerBurst {
+			var benchmark = new PixarRaytracerBurst {
 				width = 720,
 				height = 480,
 				samples = pixarRaytracer
 			};
 
 			stopwatch.Stop();
-			pixarRaytracerBurst.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			pixarRaytracerBurst.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1084,17 +1084,17 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var pixarRaytracerGCC = new PixarRaytracerGCC {
+			var benchmark = new PixarRaytracerGCC {
 				width = 720,
 				height = 480,
 				samples = pixarRaytracer
 			};
 
 			stopwatch.Stop();
-			pixarRaytracerGCC.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			pixarRaytracerGCC.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1102,17 +1102,17 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var pixarRaytracerMono = new PixarRaytracerBurst {
+			var benchmark = new PixarRaytracerBurst {
 				width = 720,
 				height = 480,
 				samples = pixarRaytracer
 			};
 
 			stopwatch.Stop();
-			pixarRaytracerMono.Execute();
+			benchmark.Execute();
 
 			stopwatch.Restart();
-			pixarRaytracerMono.Execute();
+			benchmark.Execute();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1120,16 +1120,16 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var firefliesFlockingBurst = new FirefliesFlockingBurst {
+			var benchmark = new FirefliesFlockingBurst {
 				boids = 1000,
 				lifetime = firefliesFlocking
 			};
 
 			stopwatch.Stop();
-			firefliesFlockingBurst.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			firefliesFlockingBurst.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1137,16 +1137,16 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var firefliesFlockingGCC = new FirefliesFlockingGCC {
+			var benchmark = new FirefliesFlockingGCC {
 				boids = 1000,
 				lifetime = firefliesFlocking
 			};
 
 			stopwatch.Stop();
-			firefliesFlockingGCC.Run();
+			benchmark.Run();
 
 			stopwatch.Restart();
-			firefliesFlockingGCC.Run();
+			benchmark.Run();
 
 			time = stopwatch.ElapsedTicks;
 
@@ -1154,16 +1154,16 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		{
-			var firefliesFlockingMono = new FirefliesFlockingBurst {
+			var benchmark = new FirefliesFlockingBurst {
 				boids = 1000,
 				lifetime = firefliesFlocking
 			};
 
 			stopwatch.Stop();
-			firefliesFlockingMono.Execute();
+			benchmark.Execute();
 
 			stopwatch.Restart();
-			firefliesFlockingMono.Execute();
+			benchmark.Execute();
 
 			time = stopwatch.ElapsedTicks;
 
