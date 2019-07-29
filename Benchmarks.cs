@@ -826,14 +826,14 @@ public class Benchmarks : JobComponentSystem {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private void Normalize(Vector* vector) {
-			vector->x = math.sqrt(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
-			vector->y = math.sqrt(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
-			vector->z = math.sqrt(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
+			vector->x = math.sqrt(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
+			vector->y = math.sqrt(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
+			vector->z = math.sqrt(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private float Length(Vector* vector) {
-			return math.sqrt(vector->x * 2.0f + vector->y * 2.0f + vector->z * 2.0f);
+			return math.sqrt(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
