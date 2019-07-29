@@ -487,7 +487,7 @@ public class Benchmarks : JobComponentSystem {
 			marsagliaZ = 36969 * (marsagliaZ & 65535) + (marsagliaZ >> 16);
 			marsagliaW = 18000 * (marsagliaW & 65535) + (marsagliaW >> 16);
 
-			return (((marsagliaZ << 16) + marsagliaW) + 1.0f) * 3.141592653589793f;
+			return ((marsagliaZ << 16) + marsagliaW) * 2.0f / 10000000000.0f;
 		}
 
 		private float Sample(Vector position, int* hitType) {
