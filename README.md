@@ -20,11 +20,11 @@ IL2CPP and Mono (Unity 2019.1.11f1)
 
 |          | Mandelbrot        | Pixar Raytracer     | Fireflies Flocking  |
 |----------|-------------------|---------------------|---------------------|
-| Burst    | 38,096,272 ticks  | 238,603,517 ticks   | 98,063,495 ticks   |
-| GCC      | 28,831,784 ticks  | 70,737,868 ticks    | 114,262,575 ticks   |
-| Clang    | 40,857,282 ticks  | 88,329,427 ticks    | 101,245,563 ticks   |
-| IL2CPP   | 112,912,355 ticks | 316,060,369 ticks   | 303,822,472 ticks   |
-| Mono JIT | 122,758,625 ticks | 1,386,450,841 ticks | 930,975,564 ticks   |
+| Burst    | 38,096,272 ticks  | 373,734,843 ticks   | 98,063,495 ticks   |
+| GCC      | 28,831,784 ticks  | 145,249,044 ticks   | 114,262,575 ticks   |
+| Clang    | 40,857,282 ticks  | 253,767,566 ticks   | 101,245,563 ticks   |
+| IL2CPP   | 112,912,355 ticks | 621,205,084 ticks   | 303,822,472 ticks   |
+| Mono JIT | 122,758,625 ticks | 3,081,303,677 ticks | 930,975,564 ticks   |
 
 ## Double-precision math
 
