@@ -696,8 +696,10 @@ public class Benchmarks : JobComponentSystem {
 				for (int boid = 0; boid < boids; ++boid) {
 					Add(&fireflies[boid].velocity, &fireflies[boid].acceleration);
 
-					if (Length(&fireflies[boid].velocity) > maxSpeed) {
-						Divide(&fireflies[boid].velocity, Length(&fireflies[i].velocity));
+					float speed = Length(&fireflies[boid].velocity);
+
+					if (speed > maxSpeed) {
+						Divide(&fireflies[boid].velocity, speed);
 						Multiply(&fireflies[boid].velocity, maxSpeed);
 					}
 
@@ -822,9 +824,14 @@ public class Benchmarks : JobComponentSystem {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private void Normalize(Vector* vector) {
-			vector->x = math.sqrt(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
-			vector->y = math.sqrt(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
-			vector->z = math.sqrt(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
+			float x = vector->x;
+			float y = vector->y;
+			float z = vector->z;
+			float length = math.sqrt(x * x + y * y + z * z);
+
+			vector->x = x / length;
+			vector->y = y / length;
+			vector->z = z / length;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

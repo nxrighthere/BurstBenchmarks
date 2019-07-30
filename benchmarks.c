@@ -561,9 +561,14 @@ inline static void benchmark_fireflies_flocking_multiply(Vector* vector, float v
 }
 
 inline static void benchmark_fireflies_flocking_normalize(Vector* vector) {
-	vector->x = sqrtf(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
-	vector->y = sqrtf(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
-	vector->z = sqrtf(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
+	float x = vector->x;
+	float y = vector->y;
+	float z = vector->z;
+	float length = sqrtf(x * x + y * y + z * z);
+
+	vector->x = x / length;
+	vector->y = y / length;
+	vector->z = z / length;
 }
 
 inline static float benchmark_fireflies_flocking_length(Vector* vector) {
@@ -596,8 +601,10 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 		for (int boid = 0; boid < boids; ++boid) {
 			benchmark_fireflies_flocking_add(&fireflies[boid].velocity, &fireflies[boid].acceleration);
 
-			if (benchmark_fireflies_flocking_length(&fireflies[boid].velocity) > maxSpeed) {
-				benchmark_fireflies_flocking_divide(&fireflies[boid].velocity, benchmark_fireflies_flocking_length(&fireflies[i].velocity));
+			float speed = benchmark_fireflies_flocking_length(&fireflies[boid].velocity);
+
+			if (speed > maxSpeed) {
+				benchmark_fireflies_flocking_divide(&fireflies[boid].velocity, speed);
 				benchmark_fireflies_flocking_multiply(&fireflies[boid].velocity, maxSpeed);
 			}
 
