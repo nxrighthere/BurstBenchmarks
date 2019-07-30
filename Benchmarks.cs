@@ -824,14 +824,11 @@ public class Benchmarks : JobComponentSystem {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private void Normalize(Vector* vector) {
-			float x = vector->x;
-			float y = vector->y;
-			float z = vector->z;
-			float length = math.sqrt(x * x + y * y + z * z);
+			float length = math.sqrt(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
 
-			vector->x = x / length;
-			vector->y = y / length;
-			vector->z = z / length;
+			vector->x /= length;
+			vector->y /= length;
+			vector->z /= length;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -869,6 +866,7 @@ public class Benchmarks : JobComponentSystem {
 		uint pixarRaytracer = 16;
 		uint firefliesFlocking = 1000;
 
+		/*
 		{
 			var benchmark = new FibonacciBurst {
 				number = fibonacci
@@ -1137,6 +1135,7 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Burst) Fireflies Flocking: " + time + " ticks");
 		}
+		*/
 
 		{
 			var benchmark = new FirefliesFlockingGCC {
@@ -1155,6 +1154,7 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(GCC) Fireflies Flocking: " + time + " ticks");
 		}
 
+		/*
 		{
 			var benchmark = new FirefliesFlockingBurst {
 				boids = 1000,
@@ -1171,6 +1171,7 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono) Fireflies Flocking: " + time + " ticks");
 		}
+		*/
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {

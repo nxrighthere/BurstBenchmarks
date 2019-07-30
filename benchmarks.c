@@ -561,14 +561,11 @@ inline static void benchmark_fireflies_flocking_multiply(Vector* vector, float v
 }
 
 inline static void benchmark_fireflies_flocking_normalize(Vector* vector) {
-	float x = vector->x;
-	float y = vector->y;
-	float z = vector->z;
-	float length = sqrtf(x * x + y * y + z * z);
+	float length = sqrtf(vector->x * vector->x + vector->y * vector->y + vector->z * vector->z);
 
-	vector->x = x / length;
-	vector->y = y / length;
-	vector->z = z / length;
+	vector->x /= length;
+	vector->y /= length;
+	vector->z /= length;
 }
 
 inline static float benchmark_fireflies_flocking_length(Vector* vector) {
