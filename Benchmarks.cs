@@ -866,7 +866,6 @@ public class Benchmarks : JobComponentSystem {
 		uint pixarRaytracer = 16;
 		uint firefliesFlocking = 1000;
 
-		/*
 		{
 			var benchmark = new FibonacciBurst {
 				number = fibonacci
@@ -1135,7 +1134,6 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Burst) Fireflies Flocking: " + time + " ticks");
 		}
-		*/
 
 		{
 			var benchmark = new FirefliesFlockingGCC {
@@ -1154,7 +1152,6 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(GCC) Fireflies Flocking: " + time + " ticks");
 		}
 
-		/*
 		{
 			var benchmark = new FirefliesFlockingBurst {
 				boids = 1000,
@@ -1171,7 +1168,6 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono) Fireflies Flocking: " + time + " ticks");
 		}
-		*/
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {
