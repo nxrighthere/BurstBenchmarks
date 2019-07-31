@@ -764,7 +764,7 @@ public class Benchmarks : JobComponentSystem {
 						if (distance > 0.0f && distance < neighbourDistance) {
 							cohesion = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
 
-							Add(&cohesion, &position);
+							Add(&cohesion, &fireflies[boid].position);
 
 							count++;
 						}

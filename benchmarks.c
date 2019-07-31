@@ -666,7 +666,7 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 				if (distance > 0.0f && distance < neighbourDistance) {
 					cohesion = (Vector){ 0.0f, 0.0f, 0.0f };
 
-					benchmark_fireflies_flocking_add(&cohesion, &position);
+					benchmark_fireflies_flocking_add(&cohesion, &fireflies[boid].position);
 
 					count++;
 				}
