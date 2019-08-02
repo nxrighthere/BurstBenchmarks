@@ -859,16 +859,34 @@ public class Benchmarks : JobComponentSystem {
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		long time = 0;
 
-		uint fibonacci = 46;
-		uint mandelbrot = 8;
-		uint nbody = 100000000;
-		uint sieveOfEratosthenes = 1000000;
-		uint pixarRaytracer = 16;
-		uint firefliesFlocking = 1000;
+		// Options
 
-		{
+		bool
+			burstEnabled = true,
+			gccEnabled = true,
+			monoEnabled = true;
+
+		bool
+			fibonacciEnabled = true,
+			mandelbrotEnabled = true,
+			nbodyEnabled = true,
+			sieveOfEratosthenesEnabled = true,
+			pixarRaytracerEnabled = true,
+			firefliesFlockingEnabled = true;
+
+		uint
+			fibonacciNumber = 46,
+			mandelbrotIterations = 8,
+			nbodyAdvancements = 100000000,
+			sieveOfEratosthenesIterations = 1000000,
+			pixarRaytracerSamples = 16,
+			firefliesFlockingLifetime = 1000;
+
+		// Benchmarks
+
+		if (burstEnabled && fibonacciEnabled) {
 			var benchmark = new FibonacciBurst {
-				number = fibonacci
+				number = fibonacciNumber
 			};
 
 			stopwatch.Stop();
@@ -882,9 +900,9 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Burst) Fibonacci: " + time + " ticks");
 		}
 
-		{
+		if (gccEnabled && fibonacciEnabled) {
 			var benchmark = new FibonacciGCC {
-				number = fibonacci
+				number = fibonacciNumber
 			};
 
 			stopwatch.Stop();
@@ -898,9 +916,9 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(GCC) Fibonacci: " + time + " ticks");
 		}
 
-		{
+		if (monoEnabled && fibonacciEnabled) {
 			var benchmark = new FibonacciBurst {
-				number = fibonacci
+				number = fibonacciNumber
 			};
 
 			stopwatch.Stop();
@@ -914,11 +932,11 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Mono JIT) Fibonacci: " + time + " ticks");
 		}
 
-		{
+		if (burstEnabled && mandelbrotEnabled) {
 			var benchmark = new MandelbrotBurst {
 				width = 1920,
 				height = 1080,
-				iterations = mandelbrot
+				iterations = mandelbrotIterations
 			};
 
 			stopwatch.Stop();
@@ -932,11 +950,11 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Burst) Mandelbrot: " + time + " ticks");
 		}
 
-		{
+		if (gccEnabled && mandelbrotEnabled) {
 			var benchmark = new MandelbrotGCC {
 				width = 1920,
 				height = 1080,
-				iterations = mandelbrot
+				iterations = mandelbrotIterations
 			};
 
 			stopwatch.Stop();
@@ -950,11 +968,11 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(GCC) Mandelbrot: " + time + " ticks");
 		}
 
-		{
+		if (monoEnabled && mandelbrotEnabled) {
 			var benchmark = new MandelbrotBurst {
 				width = 1920,
 				height = 1080,
-				iterations = mandelbrot
+				iterations = mandelbrotIterations
 			};
 
 			stopwatch.Stop();
@@ -968,9 +986,9 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Mono JIT) Mandelbrot: " + time + " ticks");
 		}
 
-		{
+		if (burstEnabled && nbodyEnabled) {
 			var benchmark = new NBodyBurst {
-				advancements = nbody
+				advancements = nbodyAdvancements
 			};
 
 			stopwatch.Stop();
@@ -984,9 +1002,9 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Burst) NBody: " + time + " ticks");
 		}
 
-		{
+		if (gccEnabled && nbodyEnabled) {
 			var benchmark = new NBodyGCC {
-				advancements = nbody
+				advancements = nbodyAdvancements
 			};
 
 			stopwatch.Stop();
@@ -1000,9 +1018,9 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(GCC) NBody: " + time + " ticks");
 		}
 
-		{
+		if (monoEnabled && nbodyEnabled) {
 			var benchmark = new NBodyBurst {
-				advancements = nbody
+				advancements = nbodyAdvancements
 			};
 
 			stopwatch.Stop();
@@ -1016,9 +1034,9 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Mono JIT) NBody: " + time + " ticks");
 		}
 
-		{
+		if (burstEnabled && sieveOfEratosthenesEnabled) {
 			var benchmark = new SieveOfEratosthenesBurst {
-				iterations = sieveOfEratosthenes
+				iterations = sieveOfEratosthenesIterations
 			};
 
 			stopwatch.Stop();
@@ -1032,9 +1050,9 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Burst) Sieve of Eratosthenes: " + time + " ticks");
 		}
 
-		{
+		if (gccEnabled && sieveOfEratosthenesEnabled) {
 			var benchmark = new SieveOfEratosthenesGCC {
-				iterations = sieveOfEratosthenes
+				iterations = sieveOfEratosthenesIterations
 			};
 
 			stopwatch.Stop();
@@ -1048,9 +1066,9 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(GCC) Sieve of Eratosthenes: " + time + " ticks");
 		}
 
-		{
+		if (monoEnabled && sieveOfEratosthenesEnabled) {
 			var benchmark = new SieveOfEratosthenesBurst {
-				iterations = sieveOfEratosthenes
+				iterations = sieveOfEratosthenesIterations
 			};
 
 			stopwatch.Stop();
@@ -1064,11 +1082,11 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Mono JIT) Sieve of Eratosthenes: " + time + " ticks");
 		}
 
-		{
+		if (burstEnabled && pixarRaytracerEnabled) {
 			var benchmark = new PixarRaytracerBurst {
 				width = 720,
 				height = 480,
-				samples = pixarRaytracer
+				samples = pixarRaytracerSamples
 			};
 
 			stopwatch.Stop();
@@ -1082,11 +1100,11 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Burst) Pixar Raytracer: " + time + " ticks");
 		}
 
-		{
+		if (gccEnabled && pixarRaytracerEnabled) {
 			var benchmark = new PixarRaytracerGCC {
 				width = 720,
 				height = 480,
-				samples = pixarRaytracer
+				samples = pixarRaytracerSamples
 			};
 
 			stopwatch.Stop();
@@ -1100,11 +1118,11 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(GCC) Pixar Raytracer: " + time + " ticks");
 		}
 
-		{
+		if (monoEnabled && pixarRaytracerEnabled) {
 			var benchmark = new PixarRaytracerBurst {
 				width = 720,
 				height = 480,
-				samples = pixarRaytracer
+				samples = pixarRaytracerSamples
 			};
 
 			stopwatch.Stop();
@@ -1118,10 +1136,10 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Mono JIT) Pixar Raytracer: " + time + " ticks");
 		}
 
-		{
+		if (burstEnabled && firefliesFlockingEnabled) {
 			var benchmark = new FirefliesFlockingBurst {
 				boids = 1000,
-				lifetime = firefliesFlocking
+				lifetime = firefliesFlockingLifetime
 			};
 
 			stopwatch.Stop();
@@ -1135,10 +1153,10 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(Burst) Fireflies Flocking: " + time + " ticks");
 		}
 
-		{
+		if (gccEnabled && firefliesFlockingEnabled) {
 			var benchmark = new FirefliesFlockingGCC {
 				boids = 1000,
-				lifetime = firefliesFlocking
+				lifetime = firefliesFlockingLifetime
 			};
 
 			stopwatch.Stop();
@@ -1152,10 +1170,10 @@ public class Benchmarks : JobComponentSystem {
 			Debug.Log("(GCC) Fireflies Flocking: " + time + " ticks");
 		}
 
-		{
+		if (monoEnabled && firefliesFlockingEnabled) {
 			var benchmark = new FirefliesFlockingBurst {
 				boids = 1000,
-				lifetime = firefliesFlocking
+				lifetime = firefliesFlockingLifetime
 			};
 
 			stopwatch.Stop();
