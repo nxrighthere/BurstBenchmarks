@@ -1166,7 +1166,7 @@ public class Benchmarks : JobComponentSystem {
 
 			time = stopwatch.ElapsedTicks;
 
-			Debug.Log("(Mono) Fireflies Flocking: " + time + " ticks");
+			Debug.Log("(Mono JIT) Fireflies Flocking: " + time + " ticks");
 		}
 	}
 
