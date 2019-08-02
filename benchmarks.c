@@ -3,6 +3,9 @@
 #include <math.h>
 #include <mm_malloc.h>
 
+#define MALLOC(size, alignment) _mm_malloc(size, alignment)
+#define FREE(pointer) _mm_free(pointer)
+
 #ifdef _WIN32
 	#define EXPORT __declspec(dllexport)
 #else
@@ -585,7 +588,7 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 	separationDistance = 15.0f;
 	neighbourDistance = 30.0f;
 
-	Boid* fireflies = (Boid*)_mm_malloc(boids * sizeof(Boid), 16);
+	Boid* fireflies = (Boid*)MALLOC(boids * sizeof(Boid), 16);
 
 	for (int i = 0; i < boids; ++i) {
 		fireflies[i].position = (Vector){ benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
@@ -691,7 +694,7 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 		}
 	}
 
-	_mm_free(fireflies);
+	FREE(fireflies);
 
 	return parkMiller;
 }
