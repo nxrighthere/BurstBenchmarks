@@ -855,6 +855,54 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
+	// Polynomials
+
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
+	private unsafe struct PolynomialsBurst : IJob {
+		public uint iterations;
+		public float result;
+
+		public void Execute() {
+			result = Polynomials(iterations);
+		}
+
+		private float Polynomials(uint iterations) {
+			float x = 0.2f;
+			float pu = 0.0f;
+			float* poly = stackalloc float[100];
+
+			for (uint i = 0; i < iterations; i++) {
+				float mu = 10.0f;
+				float s;
+				int j;
+
+				for (j = 0; j < 100; j++) {
+					poly[j] = mu = (mu + 2.0f) / 2.0f;
+				}
+
+				s = 0.0f;
+
+				for (j = 0; j < 100; j++) {
+					s = x * s + poly[j];
+				}
+
+				pu += s;
+			}
+
+			return pu;
+		}
+	}
+
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
+	private unsafe struct PolynomialsGCC : IJob {
+		public uint iterations;
+		public float result;
+
+		public void Execute() {
+			result = benchmark_polynomials(iterations);
+		}
+	}
+
 	protected override void OnCreate() {
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		long time = 0;
@@ -872,7 +920,8 @@ public class Benchmarks : JobComponentSystem {
 			nbodyEnabled = true,
 			sieveOfEratosthenesEnabled = true,
 			pixarRaytracerEnabled = true,
-			firefliesFlockingEnabled = true;
+			firefliesFlockingEnabled = true,
+			polynomialsEnabled = true;
 
 		uint
 			fibonacciNumber = 46,
@@ -880,7 +929,8 @@ public class Benchmarks : JobComponentSystem {
 			nbodyAdvancements = 100000000,
 			sieveOfEratosthenesIterations = 1000000,
 			pixarRaytracerSamples = 16,
-			firefliesFlockingLifetime = 1000;
+			firefliesFlockingLifetime = 1000,
+			polynomialsIterations = 10000000;
 
 		// Benchmarks
 
@@ -1186,6 +1236,54 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono JIT) Fireflies Flocking: " + time + " ticks");
 		}
+
+		if (burstEnabled && polynomialsEnabled) {
+			var benchmark = new PolynomialsBurst {
+				iterations = polynomialsIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Burst) Polynomials: " + time + " ticks");
+		}
+
+		if (gccEnabled && polynomialsEnabled) {
+			var benchmark = new PolynomialsGCC {
+				iterations = polynomialsIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(GCC) Polynomials: " + time + " ticks");
+		}
+
+		if (monoEnabled && polynomialsEnabled) {
+			var benchmark = new PolynomialsBurst {
+				iterations = polynomialsIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Execute();
+
+			stopwatch.Restart();
+			benchmark.Execute();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Mono JIT) Polynomials: " + time + " ticks");
+		}
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {
@@ -1211,4 +1309,7 @@ public class Benchmarks : JobComponentSystem {
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
 	public static extern float benchmark_fireflies_flocking(uint boids, uint lifetime);
+
+	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
+	public static extern float benchmark_polynomials(uint iterations);
 }
