@@ -10,31 +10,31 @@ IL2CPP and Mono (Unity 2019.1.11f1)
 
 |          | Fibonacci         | Sieve of Eratosthenes |
 |----------|-------------------|-----------------------|
-| Burst    | 95,390,206 ticks  | 43,365,134 ticks      |
-| GCC      | 103,722,611 ticks | 48,180,793 ticks      |
-| Clang    | 92,325,076 ticks  | 47,197,651 ticks      |
-| IL2CPP   | 157,996,002 ticks | 49,242,879 ticks      |
-| Mono JIT | 195,402,532 ticks | 57,577,577 ticks      |
+| Burst    | 95,527,914 ticks  | 43,683,271 ticks      |
+| GCC      | 102,998,330 ticks | 47,129,214 ticks      |
+| Clang    | 92,297,296 ticks  | 47,170,849 ticks      |
+| IL2CPP   | 152,131,662 ticks | 48,610,304 ticks      |
+| Mono JIT | 199,301,525 ticks | 58,812,278 ticks      |
 
 ## Single-precision math
 
-|          | Mandelbrot        | Pixar Raytracer     | Fireflies Flocking  |
-|----------|-------------------|---------------------|---------------------|
-| Burst    | 38,096,272 ticks  | 373,734,843 ticks   | 98,063,495 ticks   |
-| GCC      | 28,831,784 ticks  | 145,249,044 ticks   | 114,262,575 ticks   |
-| Clang    | 40,857,282 ticks  | 253,767,566 ticks   | 101,245,563 ticks   |
-| IL2CPP   | 112,912,355 ticks | 621,205,084 ticks   | 303,822,472 ticks   |
-| Mono JIT | 122,758,625 ticks | 3,081,303,677 ticks | 930,975,564 ticks   |
+|          | Mandelbrot        | Pixar Raytracer     | Fireflies Flocking  | Polynomials       |
+|----------|-------------------|---------------------|---------------------|-------------------|
+| Burst    | 37,951,741 ticks  | 345,809,604 ticks   | 184,693,828 ticks   | 52,312,299 ticks  |
+| GCC      | 28,761,058 ticks  | 144,083,652 ticks   | 128,894,075 ticks   | 39,252,467 ticks  |
+| Clang    | 40,431,972 ticks  | 163,787,850 ticks   | 152,781,861 ticks   | 26,659,845 ticks  |
+| IL2CPP   | 97,272,960 ticks  | 282,197,013 ticks   | 383,393,328 ticks   | 46,888,288 ticks  |
+| Mono JIT | 313,936,473 ticks | 3,081,303,677 ticks | 1,034,860,724 ticks | 172,780,244 ticks |
 
 ## Double-precision math
 
 |          | NBody             |
 |----------|-------------------|
-| Burst    | 122,758,625 ticks |
-| GCC      | 203,402,512 ticks |
-| Clang    | 114,271,368 ticks |
-| IL2CPP   | 240,394,952 ticks |
-| Mono JIT | 330,030,966 ticks |
+| Burst    | 136,450,555 ticks |
+| GCC      | 202,893,162 ticks |
+| Clang    | 112,909,174 ticks |
+| IL2CPP   | 236,041,412 ticks |
+| Mono JIT | 326,669,135 ticks |
 
 Notes
 --------
