@@ -24,7 +24,7 @@ IL2CPP and Mono (Unity 2019.2.0f1)
 | GCC      | 28,761,058 ticks  | 144,083,652 ticks   | 128,894,075 ticks   | 39,252,467 ticks  |
 | Clang    | 40,431,972 ticks  | 163,787,850 ticks   | 152,781,861 ticks   | 26,659,845 ticks  |
 | IL2CPP   | 97,272,960 ticks  | 282,197,013 ticks   | 383,393,328 ticks   | 46,888,288 ticks  |
-| Mono JIT | 313,936,473 ticks | 3,081,303,677 ticks | 1,034,860,724 ticks | 172,780,244 ticks |
+| Mono JIT | 313,936,473 ticks | 2,851,363,418 ticks | 1,034,860,724 ticks | 172,780,244 ticks |
 
 ## Double-precision math
 
