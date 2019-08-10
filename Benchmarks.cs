@@ -55,7 +55,7 @@ public class Benchmarks : JobComponentSystem {
 		private float Mandelbrot(uint width, uint height, uint iterations) {
 			float data = 0.0f;
 
-			for (int i = 0; i < iterations; i++) {
+			for (uint i = 0; i < iterations; i++) {
 				float
 					left = -2.1f,
 					right = 1.0f,
@@ -867,7 +867,8 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		private float Polynomials(uint iterations) {
-			float x = 0.2f;
+			const float x = 0.2f;
+
 			float pu = 0.0f;
 			float* poly = stackalloc float[100];
 

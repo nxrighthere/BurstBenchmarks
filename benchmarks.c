@@ -26,7 +26,7 @@ EXPORT uint32_t benchmark_fibonacci(uint32_t number) {
 EXPORT float benchmark_mandelbrot(uint32_t width, uint32_t height, uint32_t iterations) {
 	float data = 0.0f;
 
-	for (int i = 0; i < iterations; i++) {
+	for (uint32_t i = 0; i < iterations; i++) {
 		float
 			left = -2.1f,
 			right = 1.0f,
@@ -702,7 +702,8 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 // Polynomials
 
 EXPORT float benchmark_polynomials(uint32_t iterations) {
-	float x = 0.2f;
+	const float x = 0.2f;
+
 	float pu = 0.0f;
 	float poly[100] = { 0 };
 
