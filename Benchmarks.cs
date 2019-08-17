@@ -904,6 +904,63 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
+	// Particle Kinematics
+
+	private struct Particle {
+		public float x, y, z, vx, vy, vz;
+	}
+
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
+	private unsafe struct ParticleKinematicsBurst : IJob {
+		public uint quantity;
+		public uint iterations;
+		public float result;
+
+		public void Execute() {
+			result = ParticleKinematics(quantity, iterations);
+		}
+
+		private float ParticleKinematics(uint quantity, uint iterations) {
+			Particle* particles = (Particle*)UnsafeUtility.Malloc(quantity * sizeof(Particle), 16, Allocator.Persistent);
+
+			for (uint i = 0; i < quantity; ++i) {
+				particles[i].x = (float)i;
+				particles[i].y = (float)(i + 1);
+				particles[i].z = (float)(i + 2);
+				particles[i].vx = 1.0f;
+				particles[i].vy = 2.0f;
+				particles[i].vz = 3.0f;
+			}
+
+			for (uint a = 0; a < iterations; ++a) {
+				for (uint b = 0, c = quantity; b < c; ++b) {
+					Particle* p = &particles[b];
+
+					p->x += p->vx;
+					p->y += p->vy;
+					p->z += p->vz;
+				}
+			}
+
+			Particle particle = new Particle { x = particles[0].x, y = particles[0].y, z = particles[0].z };
+
+			UnsafeUtility.Free(particles, Allocator.Persistent);
+
+			return particle.x + particle.y + particle.z;
+		}
+	}
+
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
+	private unsafe struct ParticleKinematicsGCC : IJob {
+		public uint quantity;
+		public uint iterations;
+		public float result;
+
+		public void Execute() {
+			result = benchmark_particle_kinematics(quantity, iterations);
+		}
+	}
+
 	protected override void OnCreate() {
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		long time = 0;
@@ -922,7 +979,8 @@ public class Benchmarks : JobComponentSystem {
 			sieveOfEratosthenesEnabled = true,
 			pixarRaytracerEnabled = true,
 			firefliesFlockingEnabled = true,
-			polynomialsEnabled = true;
+			polynomialsEnabled = true,
+			particleKinematicsEnabled = true;
 
 		uint
 			fibonacciNumber = 46,
@@ -931,7 +989,8 @@ public class Benchmarks : JobComponentSystem {
 			sieveOfEratosthenesIterations = 1000000,
 			pixarRaytracerSamples = 16,
 			firefliesFlockingLifetime = 1000,
-			polynomialsIterations = 10000000;
+			polynomialsIterations = 10000000,
+			particleKinematicsIterations = 10000000;
 
 		// Benchmarks
 
@@ -1285,6 +1344,57 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono JIT) Polynomials: " + time + " ticks");
 		}
+
+		if (burstEnabled && particleKinematicsEnabled) {
+			var benchmark = new ParticleKinematicsBurst {
+				quantity = 1000,
+				iterations = particleKinematicsIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Burst) Particle Kinematics: " + time + " ticks");
+		}
+
+		if (gccEnabled && particleKinematicsEnabled) {
+			var benchmark = new ParticleKinematicsGCC {
+				quantity = 1000,
+				iterations = particleKinematicsIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(GCC) Particle Kinematics: " + time + " ticks");
+		}
+
+		if (monoEnabled && particleKinematicsEnabled) {
+			var benchmark = new ParticleKinematicsBurst {
+				quantity = 1000,
+				iterations = particleKinematicsIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Execute();
+
+			stopwatch.Restart();
+			benchmark.Execute();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Mono JIT) Particle Kinematics: " + time + " ticks");
+		}
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {
@@ -1313,4 +1423,7 @@ public class Benchmarks : JobComponentSystem {
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
 	public static extern float benchmark_polynomials(uint iterations);
+
+	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
+	public static extern float benchmark_particle_kinematics(uint quantity, uint iterations);
 }
