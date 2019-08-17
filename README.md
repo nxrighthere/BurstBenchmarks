@@ -43,3 +43,10 @@ Suppressing the generation of static unwind tables for exception handling with G
 Discussion
 --------
 Feel free to join the discussion in the [thread](https://forum.unity.com/threads/benchmarking-burst-against-gcc-machine-code-fibonacci-mandelbrot-nbody.715133/) on Unity forums.
+
+Supporters
+--------
+These wonderful people make open-source better:
+<p align="left"> 
+  <img src="https://drive.google.com/uc?id=1M7jL0C_UTN29ngfH8FQwDGohDXkNXMPJ" alt="supporters">
+</p>
