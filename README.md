@@ -8,13 +8,13 @@ IL2CPP and Mono (Unity 2019.2.0f1)
 
 ## Integer math
 
-|          | Fibonacci         | Sieve of Eratosthenes |
-|----------|-------------------|-----------------------|
-| Burst    | 95,527,914 ticks  | 43,738,580 ticks      |
-| GCC      | 102,998,330 ticks | 47,215,659 ticks      |
-| Clang    | 92,297,296 ticks  | 47,017,112 ticks      |
-| IL2CPP   | 152,131,662 ticks | 48,402,961 ticks      |
-| Mono JIT | 199,301,525 ticks | 56,503,823 ticks      |
+|          | Fibonacci         | Sieve of Eratosthenes | Arcfour           |
+|----------|-------------------|-----------------------|-------------------|
+| Burst    | 95,527,914 ticks  | 43,738,580 ticks      | 97,695,014 ticks  |
+| GCC      | 102,998,330 ticks | 47,215,659 ticks      | 84,442,342 ticks  |
+| Clang    | 92,297,296 ticks  | 47,017,112 ticks      | 100,679,342 ticks |
+| IL2CPP   | 152,131,662 ticks | 48,402,961 ticks      | 112,297,459 ticks |
+| Mono JIT | 199,301,525 ticks | 56,503,823 ticks      | 260,125,453 ticks |
 
 ## Single-precision math
 
