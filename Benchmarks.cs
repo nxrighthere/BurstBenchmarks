@@ -961,6 +961,100 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
+	// Arcfour
+
+	[BurstCompile(CompileSynchronously = true)]
+	private unsafe struct ArcfourBurst : IJob {
+		public uint iterations;
+		public uint result;
+
+		public void Execute() {
+			result = Arcfour(iterations);
+		}
+
+		private uint Arcfour(uint iterations) {
+			const int streamLength = 10;
+			const int keyLength = 5;
+
+			byte* state = (byte*)UnsafeUtility.Malloc(256, 8, Allocator.Persistent);
+			byte* buffer = (byte*)UnsafeUtility.Malloc(64, 8, Allocator.Persistent);
+			byte* key = stackalloc byte[5];
+			byte* stream = stackalloc byte[10];
+
+			key[0] = 0xDB;
+			key[1] = 0xB7;
+			key[2] = 0x60;
+			key[3] = 0xD4;
+			key[4] = 0x56;
+
+			stream[0] = 0xEB;
+			stream[1] = 0x9F;
+			stream[2] = 0x77;
+			stream[3] = 0x81;
+			stream[4] = 0xB7;
+			stream[5] = 0x34;
+			stream[6] = 0xCA;
+			stream[7] = 0x72;
+			stream[8] = 0xA7;
+			stream[9] = 0x19;
+
+			uint idx;
+
+			for (idx = 0; idx < iterations; idx++) {
+				KeySetup(state, key, keyLength);
+				GenerateStream(state, buffer, streamLength);
+			}
+
+			UnsafeUtility.Free(state, Allocator.Persistent);
+			UnsafeUtility.Free(buffer, Allocator.Persistent);
+
+			return idx;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void KeySetup(byte* state, byte* key, int length) {
+			int i, j;
+			byte t;
+
+			for (i = 0; i < 256; ++i) {
+				state[i] = (byte)i;
+			}
+
+			for (i = 0, j = 0; i < 256; ++i) {
+				j = (j + state[i] + key[i % length]) % 256;
+				t = state[i];
+				state[i] = state[j];
+				state[j] = t;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private void GenerateStream(byte* state, byte* buffer, int length) {
+			int i, j;
+			int idx;
+			byte t;
+
+			for (idx = 0, i = 0, j = 0; idx < length; ++idx) {
+				i = (i + 1) % 256;
+				j = (j + state[i]) % 256;
+				t = state[i];
+				state[i] = state[j];
+				state[j] = t;
+				buffer[idx] = state[(state[i] + state[j]) % 256];
+			}
+		}
+	}
+
+	[BurstCompile(CompileSynchronously = true)]
+	private unsafe struct ArcfourGCC : IJob {
+		public uint iterations;
+		public uint result;
+
+		public void Execute() {
+			result = benchmark_arcfour(iterations);
+		}
+	}
+
 	protected override void OnCreate() {
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		long time = 0;
@@ -980,7 +1074,8 @@ public class Benchmarks : JobComponentSystem {
 			pixarRaytracerEnabled = true,
 			firefliesFlockingEnabled = true,
 			polynomialsEnabled = true,
-			particleKinematicsEnabled = true;
+			particleKinematicsEnabled = true,
+			arcfourEnabled = true;
 
 		uint
 			fibonacciNumber = 46,
@@ -990,7 +1085,8 @@ public class Benchmarks : JobComponentSystem {
 			pixarRaytracerSamples = 16,
 			firefliesFlockingLifetime = 1000,
 			polynomialsIterations = 10000000,
-			particleKinematicsIterations = 10000000;
+			particleKinematicsIterations = 10000000,
+			arcfourIterations = 10000000;
 
 		// Benchmarks
 
@@ -1395,6 +1491,54 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono JIT) Particle Kinematics: " + time + " ticks");
 		}
+
+		if (burstEnabled && arcfourEnabled) {
+			var benchmark = new ArcfourBurst {
+				iterations = arcfourIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Burst) Arcfour: " + time + " ticks");
+		}
+
+		if (gccEnabled && arcfourEnabled) {
+			var benchmark = new ArcfourGCC {
+				iterations = arcfourIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(GCC) Arcfour: " + time + " ticks");
+		}
+
+		if (monoEnabled && arcfourEnabled) {
+			var benchmark = new ArcfourBurst {
+				iterations = arcfourIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Execute();
+
+			stopwatch.Restart();
+			benchmark.Execute();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Mono JIT) Arcfour: " + time + " ticks");
+		}
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {
@@ -1426,4 +1570,7 @@ public class Benchmarks : JobComponentSystem {
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
 	public static extern float benchmark_particle_kinematics(uint quantity, uint iterations);
+
+	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
+	public static extern uint benchmark_arcfour(uint iterations);
 }
