@@ -973,8 +973,8 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		private uint Arcfour(uint iterations) {
-			const int streamLength = 10;
 			const int keyLength = 5;
+			const int streamLength = 10;
 
 			byte* state = (byte*)UnsafeUtility.Malloc(256, 8, Allocator.Persistent);
 			byte* buffer = (byte*)UnsafeUtility.Malloc(64, 8, Allocator.Persistent);
@@ -1055,6 +1055,113 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
+	// Seahash
+
+	[BurstCompile(CompileSynchronously = true)]
+	private unsafe struct SeahashBurst : IJob {
+		public uint iterations;
+		public ulong result;
+
+		public void Execute() {
+			result = Seahash(iterations);
+		}
+
+		private ulong Seahash(uint iterations) {
+			const int bufferLength = 1024 * 128;
+
+			byte* buffer = (byte*)UnsafeUtility.Malloc(bufferLength, 8, Allocator.Persistent);
+
+			for (int i = 0; i < bufferLength; i++) {
+				buffer[i] = (byte)(i % 256);
+			}
+
+			ulong hash = 0;
+
+			for (uint i = 0; i < iterations; i++) {
+				hash = Compute(buffer, bufferLength, 0x16F11FE89B0D677C, 0xB480A793D8E6C86C, 0x6FE2E5AAF078EBC9, 0x14F994A4C5259381);
+			}
+
+			UnsafeUtility.Free(buffer, Allocator.Persistent);
+
+			return hash;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private ulong Read(byte* pointer) {
+			return *(ulong*)pointer;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private ulong Diffuse(ulong value) {
+			value *= 0x6EED0E9DA4D94A4F;
+			value ^= ((value >> 32) >> (int)(value >> 60));
+			value *= 0x6EED0E9DA4D94A4F;
+
+			return value;
+		}
+
+		private ulong Compute(byte* buffer, int length, ulong a, ulong b, ulong c, ulong d) {
+			const int blockSize = 32;
+
+			int end = length & ~(blockSize - 1);
+
+			for (int i = 0; i < end; i += blockSize) {
+				a ^= Read(buffer + i);
+				b ^= Read(buffer + i + 8);
+				c ^= Read(buffer + i + 16);
+				d ^= Read(buffer + i + 24);
+
+				a = Diffuse(a);
+				b = Diffuse(b);
+				c = Diffuse(c);
+				d = Diffuse(d);
+			}
+
+			int excessive = length - end;
+			byte* bufferEnd = buffer + end;
+
+			if (excessive > 0) {
+				a ^= Read(bufferEnd);
+
+				if (excessive > 8) {
+					b ^= Read(bufferEnd);
+
+					if (excessive > 16) {
+						c ^= Read(bufferEnd);
+
+						if (excessive > 24) {
+							d ^= Read(bufferEnd);
+							d = Diffuse(d);
+						}
+
+						c = Diffuse(c);
+					}
+
+					b = Diffuse(b);
+				}
+
+				a = Diffuse(a);
+			}
+
+			a ^= b;
+			c ^= d;
+			a ^= c;
+			a ^= (ulong)length;
+
+			return Diffuse(a);
+		}
+	}
+
+	[BurstCompile(CompileSynchronously = true)]
+	private unsafe struct SeahashGCC : IJob {
+		public uint iterations;
+		public ulong result;
+
+		public void Execute() {
+			result = benchmark_seahash(iterations);
+		}
+	}
+
 	protected override void OnCreate() {
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		long time = 0;
@@ -1075,7 +1182,8 @@ public class Benchmarks : JobComponentSystem {
 			firefliesFlockingEnabled = true,
 			polynomialsEnabled = true,
 			particleKinematicsEnabled = true,
-			arcfourEnabled = true;
+			arcfourEnabled = true,
+			seahashEnabled = true;
 
 		uint
 			fibonacciNumber = 46,
@@ -1086,7 +1194,8 @@ public class Benchmarks : JobComponentSystem {
 			firefliesFlockingLifetime = 1000,
 			polynomialsIterations = 10000000,
 			particleKinematicsIterations = 10000000,
-			arcfourIterations = 10000000;
+			arcfourIterations = 10000000,
+			seahashIterations = 1000000;
 
 		// Benchmarks
 
@@ -1539,6 +1648,54 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono JIT) Arcfour: " + time + " ticks");
 		}
+
+		if (burstEnabled && seahashEnabled) {
+			var benchmark = new SeahashBurst {
+				iterations = seahashIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Burst) Seahash: " + time + " ticks");
+		}
+
+		if (gccEnabled && seahashEnabled) {
+			var benchmark = new SeahashGCC {
+				iterations = seahashIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(GCC) Seahash: " + time + " ticks");
+		}
+
+		if (monoEnabled && seahashEnabled) {
+			var benchmark = new SeahashBurst {
+				iterations = seahashIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Execute();
+
+			stopwatch.Restart();
+			benchmark.Execute();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Mono JIT) Seahash: " + time + " ticks");
+		}
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {
@@ -1573,4 +1730,7 @@ public class Benchmarks : JobComponentSystem {
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
 	public static extern uint benchmark_arcfour(uint iterations);
+
+	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
+	public static extern ulong benchmark_seahash(uint iterations);
 }
