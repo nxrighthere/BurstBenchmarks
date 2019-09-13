@@ -1182,11 +1182,11 @@ public class Benchmarks : JobComponentSystem {
 
 			int* array = (int*)UnsafeUtility.Malloc(arrayLength * sizeof(int), 16, Allocator.Persistent);
 
-			for (int i = 0; i < arrayLength; i++) {
-				array[i] = Random();
-			}
+			for (uint a = 0; a < iterations; a++) {
+				for (int b = 0; b < arrayLength; b++) {
+					array[b] = Random();
+				}
 
-			for (uint i = 0; i < iterations; i++) {
 				RadixSort(array, arrayLength);
 			}
 

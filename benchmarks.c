@@ -978,11 +978,11 @@ EXPORT int benchmark_radix(uint32_t iterations) {
 
 	int* array = (int*)MALLOC(arrayLength * sizeof(int), 16);
 
-	for (int i = 0; i < arrayLength; i++) {
-		array[i] = benchmark_radix_random();
-	}
+	for (uint32_t a = 0; a < iterations; a++) {
+		for (int b = 0; b < arrayLength; b++) {
+			array[b] = benchmark_radix_random();
+		}
 
-	for (uint32_t i = 0; i < iterations; i++) {
 		benchmark_radix_sort(array, arrayLength);
 	}
 
