@@ -1162,6 +1162,100 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
+	// Radix
+
+	[BurstCompile(CompileSynchronously = true)]
+	private unsafe struct RadixBurst : IJob {
+		public uint iterations;
+		public int result;
+
+		public void Execute() {
+			result = Radix(iterations);
+		}
+
+		private uint classicRandom;
+
+		private int Radix(uint iterations) {
+			classicRandom = 7525;
+
+			const int arrayLength = 128;
+
+			int* array = (int*)UnsafeUtility.Malloc(arrayLength * sizeof(int), 16, Allocator.Persistent);
+
+			for (int i = 0; i < arrayLength; i++) {
+				array[i] = Random();
+			}
+
+			for (uint i = 0; i < iterations; i++) {
+				RadixSort(array, arrayLength);
+			}
+
+			int head = array[0];
+
+			UnsafeUtility.Free(array, Allocator.Persistent);
+
+			return head;
+		}
+
+		private int Random() {
+			classicRandom = (6253729 * classicRandom + 4396403); 
+
+			return (int)(classicRandom % 32767);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private int FindLargest(int* array, int length) {
+			int i;
+			int largest = -1;
+
+			for (i = 0; i < length; i++) {
+				if (array[i] > largest)
+					largest = array[i];
+			}
+
+			return largest;
+		}
+
+		private void RadixSort(int* array, int length) {
+			int i;
+			int* semiSorted = stackalloc int[length];
+			int significantDigit = 1;
+			int largest = FindLargest(array, length);
+
+			while (largest / significantDigit > 0) {
+				int* bucket = stackalloc int[10];
+
+				for (i = 0; i < length; i++) {
+					bucket[(array[i] / significantDigit) % 10]++;
+				}
+
+				for (i = 1; i < 10; i++) {
+					bucket[i] += bucket[i - 1];
+				}
+
+				for (i = length - 1; i >= 0; i--) {
+					semiSorted[--bucket[(array[i] / significantDigit) % 10]] = array[i];
+				}
+
+				for (i = 0; i < length; i++) {
+					array[i] = semiSorted[i];
+				}
+
+				significantDigit *= 10;
+			}
+		}
+	}
+
+	[BurstCompile(CompileSynchronously = true)]
+	private unsafe struct RadixGCC : IJob {
+		public uint iterations;
+		public int result;
+
+		public void Execute() {
+			result = benchmark_radix(iterations);
+		}
+	}
+
 	protected override void OnCreate() {
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		long time = 0;
@@ -1183,7 +1277,8 @@ public class Benchmarks : JobComponentSystem {
 			polynomialsEnabled = true,
 			particleKinematicsEnabled = true,
 			arcfourEnabled = true,
-			seahashEnabled = true;
+			seahashEnabled = true,
+			radixEnabled = true;
 
 		uint
 			fibonacciNumber = 46,
@@ -1195,7 +1290,8 @@ public class Benchmarks : JobComponentSystem {
 			polynomialsIterations = 10000000,
 			particleKinematicsIterations = 10000000,
 			arcfourIterations = 10000000,
-			seahashIterations = 1000000;
+			seahashIterations = 1000000,
+			radixIterations = 1000000;
 
 		// Benchmarks
 
@@ -1696,6 +1792,54 @@ public class Benchmarks : JobComponentSystem {
 
 			Debug.Log("(Mono JIT) Seahash: " + time + " ticks");
 		}
+
+		if (burstEnabled && radixEnabled) {
+			var benchmark = new RadixBurst {
+				iterations = radixIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Burst) Radix: " + time + " ticks");
+		}
+
+		if (gccEnabled && radixEnabled) {
+			var benchmark = new RadixGCC {
+				iterations = radixIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Run();
+
+			stopwatch.Restart();
+			benchmark.Run();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(GCC) Radix: " + time + " ticks");
+		}
+
+		if (monoEnabled && radixEnabled) {
+			var benchmark = new RadixBurst {
+				iterations = radixIterations
+			};
+
+			stopwatch.Stop();
+			benchmark.Execute();
+
+			stopwatch.Restart();
+			benchmark.Execute();
+
+			time = stopwatch.ElapsedTicks;
+
+			Debug.Log("(Mono JIT) Radix: " + time + " ticks");
+		}
 	}
 
 	protected override JobHandle OnUpdate(JobHandle inputDependencies) {
@@ -1705,32 +1849,35 @@ public class Benchmarks : JobComponentSystem {
 	private const string nativeLibrary = "benchmarks";
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern uint benchmark_fibonacci(uint number);
+	private static extern uint benchmark_fibonacci(uint number);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern float benchmark_mandelbrot(uint width, uint height, uint iterations);
+	private static extern float benchmark_mandelbrot(uint width, uint height, uint iterations);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern double benchmark_nbody(uint advancements);
+	private static extern double benchmark_nbody(uint advancements);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern uint benchmark_sieve_of_eratosthenes(uint iterations);
+	private static extern uint benchmark_sieve_of_eratosthenes(uint iterations);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern float benchmark_pixar_raytracer(uint width, uint height, uint samples);
+	private static extern float benchmark_pixar_raytracer(uint width, uint height, uint samples);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern float benchmark_fireflies_flocking(uint boids, uint lifetime);
+	private static extern float benchmark_fireflies_flocking(uint boids, uint lifetime);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern float benchmark_polynomials(uint iterations);
+	private static extern float benchmark_polynomials(uint iterations);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern float benchmark_particle_kinematics(uint quantity, uint iterations);
+	private static extern float benchmark_particle_kinematics(uint quantity, uint iterations);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern uint benchmark_arcfour(uint iterations);
+	private static extern uint benchmark_arcfour(uint iterations);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	public static extern ulong benchmark_seahash(uint iterations);
+	private static extern ulong benchmark_seahash(uint iterations);
+
+	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
+	private static extern int benchmark_radix(uint iterations);
 }
