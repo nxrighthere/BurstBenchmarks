@@ -8,13 +8,13 @@ IL2CPP and Mono (Unity 2019.2.0f1)
 
 ## Integer math
 
-|          | Fibonacci         | Sieve of Eratosthenes | Arcfour           | Seahash           |
-|----------|-------------------|-----------------------|-------------------|-------------------|
-| Burst    | 95,527,914 ticks  | 43,738,580 ticks      | 97,695,014 ticks  | 354,805,953 ticks |
-| GCC      | 102,998,330 ticks | 47,215,659 ticks      | 84,442,342 ticks  | 351,778,149 ticks |
-| Clang    | 92,297,296 ticks  | 47,017,112 ticks      | 100,679,342 ticks | 350,264,649 ticks |
-| IL2CPP   | 152,131,662 ticks | 48,402,961 ticks      | 112,297,459 ticks | 352,931,629 ticks |
-| Mono JIT | 199,301,525 ticks | 56,503,823 ticks      | 260,125,453 ticks | 479,177,648 ticks |
+|          | Fibonacci         | Sieve of Eratosthenes | Arcfour           | Seahash           | Radix             |
+|----------|-------------------|-----------------------|-------------------|-------------------|-------------------|
+| Burst    | 95,527,914 ticks  | 43,738,580 ticks      | 97,695,014 ticks  | 354,805,953 ticks | 65,637,438 ticks  |
+| GCC      | 102,998,330 ticks | 47,215,659 ticks      | 84,442,342 ticks  | 351,778,149 ticks | 68,814,202 ticks  |
+| Clang    | 92,297,296 ticks  | 47,017,112 ticks      | 100,679,342 ticks | 350,264,649 ticks | 64,345,662 ticks  |
+| IL2CPP   | 152,131,662 ticks | 48,402,961 ticks      | 112,297,459 ticks | 352,931,629 ticks | 71,256,563 ticks  |
+| Mono JIT | 199,301,525 ticks | 56,503,823 ticks      | 260,125,453 ticks | 479,177,648 ticks | 141,545,880 ticks |
 
 ## Single-precision math
 
