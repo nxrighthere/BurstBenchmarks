@@ -1197,6 +1197,7 @@ public class Benchmarks : JobComponentSystem {
 			return head;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private int Random() {
 			classicRandom = (6253729 * classicRandom + 4396403); 
 

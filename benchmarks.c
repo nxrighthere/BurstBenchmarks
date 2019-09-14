@@ -924,7 +924,7 @@ EXPORT uint64_t benchmark_seahash(uint32_t iterations) {
 
 static uint32_t classicRandom;
 
-int benchmark_radix_random(void) {
+inline static int benchmark_radix_random(void) {
 	classicRandom = (6253729 * classicRandom + 4396403); 
 
 	return (int)(classicRandom % 32767);
