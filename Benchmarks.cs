@@ -1187,7 +1187,7 @@ public class Benchmarks : JobComponentSystem {
 					array[b] = Random();
 				}
 
-				RadixSort(array, arrayLength);
+				Sort(array, arrayLength);
 			}
 
 			int head = array[0];
@@ -1217,7 +1217,7 @@ public class Benchmarks : JobComponentSystem {
 			return largest;
 		}
 
-		private void RadixSort(int* array, int length) {
+		private void Sort(int* array, int length) {
 			int i;
 			int* semiSorted = stackalloc int[length];
 			int significantDigit = 1;
