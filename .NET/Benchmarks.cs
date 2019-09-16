@@ -3,9 +3,16 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 public class Benchmarks {
-	private static unsafe void* Malloc(int size, int alignment) {
-		IntPtr pointer = Marshal.AllocHGlobal(size + (alignment - 8));
-		IntPtr aligned = new IntPtr(alignment * (((long)pointer + (alignment - 1)) / alignment));
+	private static unsafe void* Malloc(int size, int alignment, out void* pointer) {
+		IntPtr aligned = IntPtr.Zero;
+
+		if (alignment > 8) {
+			pointer = (void*)Marshal.AllocHGlobal(size + (alignment - 8));
+			aligned = new IntPtr(alignment * (((long)pointer + (alignment - 1)) / alignment));
+		} else {
+			aligned = Marshal.AllocHGlobal(size);
+			pointer = (void*)aligned;
+		}
 
 		return (void*)aligned;
 	}
@@ -680,7 +687,7 @@ public class Benchmarks {
 			separationDistance = 15.0f;
 			neighbourDistance = 30.0f;
 
-			Boid* fireflies = (Boid*)Malloc((int)(boids * sizeof(Boid)), 16);
+			Boid* fireflies = (Boid*)Malloc((int)(boids * sizeof(Boid)), 16, out void* firefliesPointer);
 
 			for (int i = 0; i < boids; ++i) {
 				fireflies[i].position = new Vector { x = Random(), y = Random(), z = Random() };
@@ -786,7 +793,7 @@ public class Benchmarks {
 				}
 			}
 
-			Free(fireflies);
+			Free(firefliesPointer);
 
 			return parkMiller;
 		}
@@ -914,7 +921,7 @@ public class Benchmarks {
 		}
 
 		private float ParticleKinematics(uint quantity, uint iterations) {
-			Particle* particles = (Particle*)Malloc((int)(quantity * sizeof(Particle)), 16);
+			Particle* particles = (Particle*)Malloc((int)(quantity * sizeof(Particle)), 16, out void* particlesPointer);
 
 			for (uint i = 0; i < quantity; ++i) {
 				particles[i].x = (float)i;
@@ -937,7 +944,7 @@ public class Benchmarks {
 
 			Particle particle = new Particle { x = particles[0].x, y = particles[0].y, z = particles[0].z };
 
-			Free(particles);
+			Free(particlesPointer);
 
 			return particle.x + particle.y + particle.z;
 		}
@@ -967,8 +974,8 @@ public class Benchmarks {
 			const int keyLength = 5;
 			const int streamLength = 10;
 
-			byte* state = (byte*)Malloc(256, 8);
-			byte* buffer = (byte*)Malloc(64, 8);
+			byte* state = (byte*)Malloc(256, 8, out void* statePointer);
+			byte* buffer = (byte*)Malloc(64, 8, out void* bufferPointer);
 			byte* key = stackalloc byte[5];
 			byte* stream = stackalloc byte[10];
 
@@ -996,8 +1003,8 @@ public class Benchmarks {
 				GenerateStream(state, buffer, streamLength);
 			}
 
-			Free(state);
-			Free(buffer);
+			Free(statePointer);
+			Free(bufferPointer);
 
 			return idx;
 		}
@@ -1058,7 +1065,7 @@ public class Benchmarks {
 		private ulong Seahash(uint iterations) {
 			const int bufferLength = 1024 * 128;
 
-			byte* buffer = (byte*)Malloc(bufferLength, 8);
+			byte* buffer = (byte*)Malloc(bufferLength, 8, out void* bufferPointer);
 
 			for (int i = 0; i < bufferLength; i++) {
 				buffer[i] = (byte)(i % 256);
@@ -1070,7 +1077,7 @@ public class Benchmarks {
 				hash = Compute(buffer, bufferLength, 0x16F11FE89B0D677C, 0xB480A793D8E6C86C, 0x6FE2E5AAF078EBC9, 0x14F994A4C5259381);
 			}
 
-			Free(buffer);
+			Free(bufferPointer);
 
 			return hash;
 		}
@@ -1167,7 +1174,7 @@ public class Benchmarks {
 
 			const int arrayLength = 128;
 
-			int* array = (int*)Malloc(arrayLength * sizeof(int), 16);
+			int* array = (int*)Malloc(arrayLength * sizeof(int), 16, out void* arrayPointer);
 
 			for (uint a = 0; a < iterations; a++) {
 				for (int b = 0; b < arrayLength; b++) {
@@ -1179,7 +1186,7 @@ public class Benchmarks {
 
 			int head = array[0];
 
-			Free(array);
+			Free(arrayPointer);
 
 			return head;
 		}
@@ -1255,14 +1262,14 @@ public class Benchmarks {
 			gccEnabled = false;
 
 		bool
-			fibonacciEnabled = true,
-			mandelbrotEnabled = true,
-			nbodyEnabled = true,
-			sieveOfEratosthenesEnabled = true,
-			pixarRaytracerEnabled = true,
-			firefliesFlockingEnabled = true,
-			polynomialsEnabled = true,
-			particleKinematicsEnabled = true,
+			fibonacciEnabled = false,
+			mandelbrotEnabled = false,
+			nbodyEnabled = false,
+			sieveOfEratosthenesEnabled = false,
+			pixarRaytracerEnabled = false,
+			firefliesFlockingEnabled = false,
+			polynomialsEnabled = false,
+			particleKinematicsEnabled = false,
 			arcfourEnabled = true,
 			seahashEnabled = true,
 			radixEnabled = true;
