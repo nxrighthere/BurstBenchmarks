@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 
 public class Benchmarks {
 	private static unsafe void* Malloc(int size, int alignment) {
-		IntPtr pointer = Marshal.AllocHGlobal(size + 8);
-		IntPtr aligned = new IntPtr(16 * (((long)pointer + 15) / 16));
+		IntPtr pointer = Marshal.AllocHGlobal(size + (alignment - 8));
+		IntPtr aligned = new IntPtr(alignment * (((long)pointer + (alignment - 1)) / alignment));
 
 		return (void*)aligned;
 	}
