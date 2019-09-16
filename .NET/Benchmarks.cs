@@ -1262,14 +1262,14 @@ public class Benchmarks {
 			gccEnabled = false;
 
 		bool
-			fibonacciEnabled = false,
-			mandelbrotEnabled = false,
-			nbodyEnabled = false,
-			sieveOfEratosthenesEnabled = false,
-			pixarRaytracerEnabled = false,
-			firefliesFlockingEnabled = false,
-			polynomialsEnabled = false,
-			particleKinematicsEnabled = false,
+			fibonacciEnabled = true,
+			mandelbrotEnabled = true,
+			nbodyEnabled = true,
+			sieveOfEratosthenesEnabled = true,
+			pixarRaytracerEnabled = true,
+			firefliesFlockingEnabled = true,
+			polynomialsEnabled = true,
+			particleKinematicsEnabled = true,
 			arcfourEnabled = true,
 			seahashEnabled = true,
 			radixEnabled = true;
