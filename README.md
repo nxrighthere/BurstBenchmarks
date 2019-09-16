@@ -1,10 +1,11 @@
 # BurstBenchmarks
-I was curious how well Burst/IL2CPP optimizes C# code against GCC/Clang with C, so I ported five famous benchmarks, plus a raytracer, a minified flocking simulation, particle kinematics, a stream cipher, a hashing algorithm, and radix sort, with different workloads and made them identical between the two languages. C code compiled with all possible optimizations using `-DNDEBUG -Ofast -march=native -flto` compiler options. Benchmarks were done on Windows 10 w/ AMD FX-4300 (4GHz) using standalone build. Mono JIT is included for fun.
+I was curious how well Burst/IL2CPP optimizes C# code against GCC/Clang with C, so I ported five famous benchmarks, plus a raytracer, a minified flocking simulation, particle kinematics, a stream cipher, a hashing algorithm, and radix sort, with different workloads and made them identical between the two languages. C code compiled with all possible optimizations using `-DNDEBUG -Ofast -march=native -flto` compiler options. Benchmarks were done on Windows 10 w/ AMD FX-4300 (4GHz) using standalone build. Mono JIT and RyuJIT is included for fun.
 
 Burst 1.1.2<br/>
 GCC 8.1.0<br/>
 Clang (LLVM 8.0.1)<br/>
-IL2CPP and Mono (Unity 2019.2.0f1)
+IL2CPP and Mono (Unity 2019.2.0f1)<br/>
+RyuJIT (.NET Core 2.2.402)
 
 ## Integer math
 
@@ -15,6 +16,7 @@ IL2CPP and Mono (Unity 2019.2.0f1)
 | Clang    | 92,297,296 ticks  | 47,017,112 ticks      | 100,679,342 ticks | 350,264,649 ticks | 64,345,662 ticks  |
 | IL2CPP   | 152,131,662 ticks | 48,402,961 ticks      | 112,297,459 ticks | 352,931,629 ticks | 71,256,563 ticks  |
 | Mono JIT | 199,301,525 ticks | 56,503,823 ticks      | 260,125,453 ticks | 479,177,648 ticks | 141,545,880 ticks |
+| RyuJIT   | 109,923,347 ticks | 131,596,879 ticks     | 159,078,340 ticks | 359,012,400 ticks | 79,560,085 ticks  |
 
 ## Single-precision math
 
@@ -25,6 +27,7 @@ IL2CPP and Mono (Unity 2019.2.0f1)
 | Clang    | 40,431,972 ticks  | 163,787,850 ticks   | 152,781,861 ticks   | 26,659,845 ticks  | 193,759,862 ticks   |
 | IL2CPP   | 97,272,960 ticks  | 282,197,013 ticks   | 383,393,328 ticks   | 46,888,288 ticks  | 185,309,296 ticks   |
 | Mono JIT | 313,936,473 ticks | 2,851,363,418 ticks | 1,034,860,724 ticks | 172,780,244 ticks | 377,228,204 ticks   |
+| RyuJIT   | 91,340,492 ticks  | 827,459,330 ticks   | 457,871,555 ticks   | 149,737,626 ticks | 957,504,664 ticks   |
 
 ## Double-precision math
 
@@ -35,6 +38,7 @@ IL2CPP and Mono (Unity 2019.2.0f1)
 | Clang    | 112,909,174 ticks |
 | IL2CPP   | 236,041,412 ticks |
 | Mono JIT | 326,669,135 ticks |
+| RyuJIT   | 153,155,315 ticks |
 
 Notes
 --------
