@@ -16,7 +16,7 @@ RyuJIT (.NET Core 2.2.402)
 | Clang    | 92,297,296 ticks  | 47,017,112 ticks      | 100,679,342 ticks | 350,264,649 ticks | 64,345,662 ticks  |
 | IL2CPP   | 152,131,662 ticks | 48,402,961 ticks      | 112,297,459 ticks | 352,931,629 ticks | 71,256,563 ticks  |
 | Mono JIT | 199,301,525 ticks | 56,503,823 ticks      | 260,125,453 ticks | 479,177,648 ticks | 141,545,880 ticks |
-| RyuJIT   | 109,923,347 ticks | 131,596,879 ticks     | 159,078,340 ticks | 359,012,400 ticks | 79,560,085 ticks  |
+| RyuJIT   | 109,374,001 ticks | 53,213,658 ticks      | 135,955,933 ticks | 354,541,127 ticks | 79,393,575 ticks  |
 
 ## Single-precision math
 
@@ -27,7 +27,7 @@ RyuJIT (.NET Core 2.2.402)
 | Clang    | 40,431,972 ticks  | 163,787,850 ticks   | 152,781,861 ticks   | 26,659,845 ticks  | 193,759,862 ticks   |
 | IL2CPP   | 97,272,960 ticks  | 282,197,013 ticks   | 383,393,328 ticks   | 46,888,288 ticks  | 185,309,296 ticks   |
 | Mono JIT | 313,936,473 ticks | 2,851,363,418 ticks | 1,034,860,724 ticks | 172,780,244 ticks | 377,228,204 ticks   |
-| RyuJIT   | 91,340,492 ticks  | 827,459,330 ticks   | 457,871,555 ticks   | 149,737,626 ticks | 957,504,664 ticks   |
+| RyuJIT   | 65,437,241 ticks  | 823,220,147 ticks   | 284,619,392 ticks   | 63,997,704 ticks  | 199,732,371 ticks   |
 
 ## Double-precision math
 
@@ -38,10 +38,12 @@ RyuJIT (.NET Core 2.2.402)
 | Clang    | 112,909,174 ticks |
 | IL2CPP   | 236,041,412 ticks |
 | Mono JIT | 326,669,135 ticks |
-| RyuJIT   | 153,155,315 ticks |
+| RyuJIT   | 136,455,343 ticks |
 
 Notes
 --------
+Enabled Tiered Compilation in .NET Core negatively affects performance in the tests.
+
 Suppressing the generation of static unwind tables for exception handling with GCC using `-fno-asynchronous-unwind-tables` leads to better performance in the recursive Fibonacci test: 84,983,484 ticks. All other tests remain unaffected.
 
 Discussion
