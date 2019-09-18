@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <TieredCompilation>True</TieredCompilation>
+    <TieredCompilation>False</TieredCompilation>
     <LangVersion>7</LangVersion>
   </PropertyGroup>
 
