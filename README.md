@@ -4,7 +4,7 @@ I was curious how well Burst/IL2CPP optimizes C# code against GCC/Clang with C, 
 Burst 1.1.2<br/>
 GCC 8.1.0<br/>
 Clang (LLVM 8.0.1)<br/>
-IL2CPP and Mono (Unity 2019.2.0f1)<br/>
+IL2CPP and Mono JIT (Unity 2019.2.0f1)<br/>
 RyuJIT (.NET Core 2.2.402)
 
 ## Integer math
