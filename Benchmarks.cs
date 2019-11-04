@@ -759,7 +759,7 @@ public class Benchmarks : JobComponentSystem {
 						float distance = Length(&position);
 
 						if (distance > 0.0f && distance < neighbourDistance) {
-							cohesion = position;
+							cohesion = fireflies[boid].position;
 							count++;
 						}
 					}
