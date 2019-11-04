@@ -727,10 +727,7 @@ public class Benchmarks {
 							Normalize(&position);
 							Divide(&position, distance);
 
-							separation = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
-
-							Add(&separation, &position);
-
+							separation = position;
 							count++;
 						}
 					}
@@ -766,10 +763,7 @@ public class Benchmarks {
 						float distance = Length(&position);
 
 						if (distance > 0.0f && distance < neighbourDistance) {
-							cohesion = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
-
-							Add(&cohesion, &fireflies[boid].position);
-
+							cohesion = position;
 							count++;
 						}
 					}
@@ -1193,7 +1187,7 @@ public class Benchmarks {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private int Random() {
-			classicRandom = (6253729 * classicRandom + 4396403); 
+			classicRandom = (6253729 * classicRandom + 4396403);
 
 			return (int)(classicRandom % 32767);
 		}

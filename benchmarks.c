@@ -628,10 +628,7 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 					benchmark_fireflies_flocking_normalize(&position);
 					benchmark_fireflies_flocking_divide(&position, distance);
 
-					separation = (Vector){ 0.0f, 0.0f, 0.0f };
-
-					benchmark_fireflies_flocking_add(&separation, &position);
-
+					separation = position;
 					count++;
 				}
 			}
@@ -667,10 +664,7 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 				float distance = benchmark_fireflies_flocking_length(&position);
 
 				if (distance > 0.0f && distance < neighbourDistance) {
-					cohesion = (Vector){ 0.0f, 0.0f, 0.0f };
-
-					benchmark_fireflies_flocking_add(&cohesion, &fireflies[boid].position);
-
+					cohesion = position;
 					count++;
 				}
 			}
@@ -925,7 +919,7 @@ EXPORT uint64_t benchmark_seahash(uint32_t iterations) {
 static uint32_t classicRandom;
 
 inline static int benchmark_radix_random(void) {
-	classicRandom = (6253729 * classicRandom + 4396403); 
+	classicRandom = (6253729 * classicRandom + 4396403);
 
 	return (int)(classicRandom % 32767);
 }

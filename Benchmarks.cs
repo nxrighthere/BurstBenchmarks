@@ -723,10 +723,7 @@ public class Benchmarks : JobComponentSystem {
 							Normalize(&position);
 							Divide(&position, distance);
 
-							separation = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
-
-							Add(&separation, &position);
-
+							position = position;
 							count++;
 						}
 					}
@@ -762,10 +759,7 @@ public class Benchmarks : JobComponentSystem {
 						float distance = Length(&position);
 
 						if (distance > 0.0f && distance < neighbourDistance) {
-							cohesion = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
-
-							Add(&cohesion, &fireflies[boid].position);
-
+							cohesion = position;
 							count++;
 						}
 					}
@@ -1199,7 +1193,7 @@ public class Benchmarks : JobComponentSystem {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private int Random() {
-			classicRandom = (6253729 * classicRandom + 4396403); 
+			classicRandom = (6253729 * classicRandom + 4396403);
 
 			return (int)(classicRandom % 32767);
 		}
