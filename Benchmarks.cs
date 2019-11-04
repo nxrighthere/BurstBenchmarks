@@ -723,7 +723,7 @@ public class Benchmarks : JobComponentSystem {
 							Normalize(&position);
 							Divide(&position, distance);
 
-							position = position;
+							separation = position;
 							count++;
 						}
 					}
