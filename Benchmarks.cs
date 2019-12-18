@@ -660,7 +660,7 @@ public class Benchmarks : JobComponentSystem {
 		public Vector position, velocity, acceleration;
 	}
 
-	[BurstCompile(CompileSynchronously = true)]
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
 	private unsafe struct FirefliesFlockingBurst : IJob {
 		public uint boids;
 		public uint lifetime;
@@ -838,7 +838,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 	}
 
-	[BurstCompile(CompileSynchronously = true)]
+	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
 	private unsafe struct FirefliesFlockingGCC : IJob {
 		public uint boids;
 		public uint lifetime;
