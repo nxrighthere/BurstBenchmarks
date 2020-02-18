@@ -54,5 +54,5 @@ Supporters
 --------
 These wonderful people make open-source better:
 <p align="left"> 
-  <img src="https://drive.google.com/uc?id=1M7jL0C_UTN29ngfH8FQwDGohDXkNXMPJ" alt="supporters">
+  <img src="https://github.com/Rageware/Supporters/blob/master/burstbenchmarks-supporters.png" alt="supporters">
 </p>
