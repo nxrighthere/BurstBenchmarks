@@ -27,7 +27,7 @@ public class Benchmarks {
 
 	// Fibonacci
 
-	private struct FibonacciNET : IJob {
+	public struct FibonacciNET : IJob {
 		public uint number;
 		public uint result;
 
@@ -54,7 +54,7 @@ public class Benchmarks {
 
 	// Mandelbrot
 
-	private struct MandelbrotNET : IJob {
+	public struct MandelbrotNET : IJob {
 		public uint width;
 		public uint height;
 		public uint iterations;
@@ -123,7 +123,7 @@ public class Benchmarks {
 		public double x, y, z, vx, vy, vz, mass;
 	}
 
-	private unsafe struct NBodyNET : IJob {
+	public unsafe struct NBodyNET : IJob {
 		public uint advancements;
 		public double result;
 
@@ -303,7 +303,7 @@ public class Benchmarks {
 
 	// Sieve of Eratosthenes
 
-	private unsafe struct SieveOfEratosthenesNET : IJob {
+	public unsafe struct SieveOfEratosthenesNET : IJob {
 		public uint iterations;
 		public uint result;
 
@@ -365,7 +365,7 @@ public class Benchmarks {
 		Sun = 3
 	}
 
-	private unsafe struct PixarRaytracerNET : IJob {
+	public unsafe struct PixarRaytracerNET : IJob {
 		public uint width;
 		public uint height;
 		public uint samples;
@@ -665,7 +665,7 @@ public class Benchmarks {
 		public Vector position, velocity, acceleration;
 	}
 
-	private unsafe struct FirefliesFlockingNET : IJob {
+	public unsafe struct FirefliesFlockingNET : IJob {
 		public uint boids;
 		public uint lifetime;
 		public float result;
@@ -854,7 +854,7 @@ public class Benchmarks {
 
 	// Polynomials
 
-	private unsafe struct PolynomialsNET : IJob {
+	public unsafe struct PolynomialsNET : IJob {
 		public uint iterations;
 		public float result;
 
@@ -905,7 +905,7 @@ public class Benchmarks {
 		public float x, y, z, vx, vy, vz;
 	}
 
-	private unsafe struct ParticleKinematicsNET : IJob {
+	public unsafe struct ParticleKinematicsNET : IJob {
 		public uint quantity;
 		public uint iterations;
 		public float result;
@@ -956,7 +956,7 @@ public class Benchmarks {
 
 	// Arcfour
 
-	private unsafe struct ArcfourNET : IJob {
+	public unsafe struct ArcfourNET : IJob {
 		public uint iterations;
 		public uint result;
 
@@ -1048,7 +1048,7 @@ public class Benchmarks {
 
 	// Seahash
 
-	private unsafe struct SeahashNET : IJob {
+	public unsafe struct SeahashNET : IJob {
 		public uint iterations;
 		public ulong result;
 
@@ -1153,7 +1153,7 @@ public class Benchmarks {
 
 	// Radix
 
-	private unsafe struct RadixNET : IJob {
+	public unsafe struct RadixNET : IJob {
 		public uint iterations;
 		public int result;
 
