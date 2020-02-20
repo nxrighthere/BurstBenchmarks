@@ -12,6 +12,18 @@
 	#define EXPORT extern
 #endif
 
+#ifdef __cplusplus
+#define STRUCT_INIT(x) x
+#else
+#define STRUCT_INIT(x) (x)
+#endif
+
+#ifdef _MSC_VER
+#define ALLOCA(type, name, length) type* name = (type*)_alloca(sizeof(type) * length)
+#else
+#define ALLOCA(type, name, length) type name[length]
+#endif
+
 // Fibonacci
 
 EXPORT uint32_t benchmark_fibonacci(uint32_t number) {
@@ -75,7 +87,7 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 	const double solarMass = 4 * pi * pi;
 	const double daysPerYear = 365.24;
 
-	sun[1] = (NBody){ // Jupiter
+	sun[1] = STRUCT_INIT(NBody) { // Jupiter
 		4.84143144246472090e+00,
 		-1.16032004402742839e+00,
 		-1.03622044471123109e-01,
@@ -85,7 +97,7 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 		9.54791938424326609e-04 * solarMass
 	};
 
-	sun[2] = (NBody){ // Saturn
+	sun[2] = STRUCT_INIT(NBody) { // Saturn
 		8.34336671824457987e+00,
 		4.12479856412430479e+00,
 		-4.03523417114321381e-01,
@@ -95,7 +107,7 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 		2.85885980666130812e-04 * solarMass
 	};
 
-	sun[3] = (NBody){ // Uranus
+	sun[3] = STRUCT_INIT(NBody) { // Uranus
 		1.28943695621391310e+01,
 		-1.51111514016986312e+01,
 		-2.23307578892655734e-01,
@@ -105,7 +117,7 @@ inline static void benchmark_nbody_initialize_bodies(NBody* sun, NBody* end) {
 		4.36624404335156298e-05 * solarMass
 	};
 
-	sun[4] = (NBody){ // Neptune
+	sun[4] = STRUCT_INIT(NBody) { // Neptune
 		1.53796971148509165e+01,
 		-2.59193146099879641e+01,
 		1.79258772950371181e-01,
@@ -362,8 +374,8 @@ static float benchmark_pixar_raytracer_sample(Vector position, int* hitType) {
 	f.z = 0.0f;
 
 	for (int i = 0; i < size; i += 4) {
-		Vector begin = benchmark_pixar_raytracer_multiply_float((Vector){ letters[i] - 79.0f, letters[i + 1] - 79.0f, 0.0f }, 0.5f);
-		Vector e = benchmark_pixar_raytracer_add(benchmark_pixar_raytracer_multiply_float((Vector){ letters[i + 2] - 79.0f, letters[i + 3] - 79.0f, 0.0f }, 0.5f), benchmark_pixar_raytracer_multiply_float(begin, -1.0f));
+		Vector begin = benchmark_pixar_raytracer_multiply_float(STRUCT_INIT(Vector) { letters[i] - 79.0f, letters[i + 1] - 79.0f, 0.0f }, 0.5f);
+		Vector e = benchmark_pixar_raytracer_add(benchmark_pixar_raytracer_multiply_float(STRUCT_INIT(Vector) { letters[i + 2] - 79.0f, letters[i + 3] - 79.0f, 0.0f }, 0.5f), benchmark_pixar_raytracer_multiply_float(begin, -1.0f));
 		Vector o = benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(f, benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(begin, e), benchmark_pixar_raytracer_min(-benchmark_pixar_raytracer_min(benchmark_pixar_raytracer_modulus(benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(begin, f), -1.0f), e) / benchmark_pixar_raytracer_modulus_self(e), 0.0f), 1.0f))), -1.0f);
 
 		distance = benchmark_pixar_raytracer_min(distance, benchmark_pixar_raytracer_modulus_self(o));
@@ -373,8 +385,8 @@ static float benchmark_pixar_raytracer_sample(Vector position, int* hitType) {
 
 	Vector curves[2] = { 0 };
 
-	curves[0] = (Vector){ -11.0f, 6.0f, 0.0f };
-	curves[1] = (Vector){ 11.0f, 6.0f, 0.0f };
+	curves[0] = STRUCT_INIT(Vector) { -11.0f, 6.0f, 0.0f };
+	curves[1] = STRUCT_INIT(Vector) { 11.0f, 6.0f, 0.0f };
 
 	for (int i = 2; i > 0; i--) {
 		Vector o = benchmark_pixar_raytracer_add(f, benchmark_pixar_raytracer_multiply_float(curves[i], -1.0f));
@@ -397,7 +409,7 @@ static float benchmark_pixar_raytracer_sample(Vector position, int* hitType) {
 	distance = powf(powf(distance, 8.0f) + powf(position.z, 8.0f), 0.125f) - 0.5f;
 	*hitType = PIXAR_RAYTRACER_LETTER;
 
-	float roomDistance = benchmark_pixar_raytracer_min(-benchmark_pixar_raytracer_min(benchmark_pixar_raytracer_box_test(position, (Vector){ -30.0f, -0.5f, -30.0f }, (Vector){ 30.0f, 18.0f, 30.0f }), benchmark_pixar_raytracer_box_test(position, (Vector){ -25.0f, -17.5f, -25.0f }, (Vector){ 25.0f, 20.0f, 25.0f })), benchmark_pixar_raytracer_box_test((Vector){ fmodf(fabsf(position.x), 8), position.y, position.z }, (Vector){ 1.5f, 18.5f, -25.0f }, (Vector){ 6.5f, 20.0f, 25.0f }));
+	float roomDistance = benchmark_pixar_raytracer_min(-benchmark_pixar_raytracer_min(benchmark_pixar_raytracer_box_test(position, STRUCT_INIT(Vector) { -30.0f, -0.5f, -30.0f }, STRUCT_INIT(Vector) { 30.0f, 18.0f, 30.0f }), benchmark_pixar_raytracer_box_test(position, STRUCT_INIT(Vector) { -25.0f, -17.5f, -25.0f }, STRUCT_INIT(Vector) { 25.0f, 20.0f, 25.0f })), benchmark_pixar_raytracer_box_test(STRUCT_INIT(Vector) { fmodf(fabsf(position.x), 8), position.y, position.z }, STRUCT_INIT(Vector) { 1.5f, 18.5f, -25.0f }, STRUCT_INIT(Vector) { 6.5f, 20.0f, 25.0f }));
 
 	if (roomDistance < distance) {
 		distance = roomDistance;
@@ -424,7 +436,7 @@ static int benchmark_pixar_raytracer_ray_marching(Vector origin, Vector directio
 		distance = benchmark_pixar_raytracer_sample(*hitPosition, &hitType);
 
 		if (distance < 0.01f || ++noHitCount > 99) {
-			*hitNormal = benchmark_pixar_raytracer_inverse((Vector){ benchmark_pixar_raytracer_sample(benchmark_pixar_raytracer_add(*hitPosition, (Vector){ 0.01f, 0.0f, 0.0f }), &noHitCount) - distance, benchmark_pixar_raytracer_sample(benchmark_pixar_raytracer_add(*hitPosition, (Vector){ 0.0f, 0.01f, 0.0f }), &noHitCount) - distance, benchmark_pixar_raytracer_sample(benchmark_pixar_raytracer_add(*hitPosition, (Vector){ 0.0f, 0.0f, 0.01f }), &noHitCount) - distance });
+			*hitNormal = benchmark_pixar_raytracer_inverse(STRUCT_INIT(Vector) { benchmark_pixar_raytracer_sample(benchmark_pixar_raytracer_add(*hitPosition, STRUCT_INIT(Vector) { 0.01f, 0.0f, 0.0f }), &noHitCount) - distance, benchmark_pixar_raytracer_sample(benchmark_pixar_raytracer_add(*hitPosition, STRUCT_INIT(Vector) { 0.0f, 0.01f, 0.0f }), &noHitCount) - distance, benchmark_pixar_raytracer_sample(benchmark_pixar_raytracer_add(*hitPosition, STRUCT_INIT(Vector) { 0.0f, 0.0f, 0.01f }), &noHitCount) - distance });
 
 			return hitType;
 		}
@@ -439,7 +451,7 @@ static Vector benchmark_pixar_raytracer_trace(Vector origin, Vector direction) {
 		normal = { 1.0f, 1.0f, 1.0f },
 		color = { 1.0f, 1.0f, 1.0f },
 		attenuation = { 1.0f, 1.0f, 1.0f },
-		lightDirection = benchmark_pixar_raytracer_inverse((Vector){ 0.6f, 0.6f, 1.0f });
+		lightDirection = benchmark_pixar_raytracer_inverse(STRUCT_INIT(Vector) { 0.6f, 0.6f, 1.0f });
 
 	for (int bounce = 3; bounce > 0; bounce--) {
 		int hitType = benchmark_pixar_raytracer_ray_marching(origin, direction, &sampledPosition, &normal);
@@ -466,18 +478,18 @@ static Vector benchmark_pixar_raytracer_trace(Vector origin, Vector direction) {
 					u = -1.0f / (g + normal.z),
 					v = normal.x * normal.y * u;
 
-				direction = benchmark_pixar_raytracer_add(benchmark_pixar_raytracer_add((Vector){ v, g + normal.y * normal.y * u, -normal.y * (cosf(p) * s) }, (Vector){ 1.0f + g * normal.x * normal.x * u, g * v, -g * normal.x }), benchmark_pixar_raytracer_multiply_float(normal, sqrtf(c)));
+				direction = benchmark_pixar_raytracer_add(benchmark_pixar_raytracer_add(STRUCT_INIT(Vector) { v, g + normal.y * normal.y * u, -normal.y * (cosf(p) * s) }, STRUCT_INIT(Vector) { 1.0f + g * normal.x * normal.x * u, g * v, -g * normal.x }), benchmark_pixar_raytracer_multiply_float(normal, sqrtf(c)));
 				origin = benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(sampledPosition, direction), 0.1f);
 				attenuation = benchmark_pixar_raytracer_multiply_float(attenuation, 0.2f);
 
 				if (incidence > 0 && benchmark_pixar_raytracer_ray_marching(benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_add(sampledPosition, normal), 0.1f), lightDirection, &sampledPosition, &normal) == PIXAR_RAYTRACER_SUN)
-					color = benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_multiply(benchmark_pixar_raytracer_add(color, attenuation), (Vector){ 500.0f, 400.0f, 100.0f }), incidence);
+					color = benchmark_pixar_raytracer_multiply_float(benchmark_pixar_raytracer_multiply(benchmark_pixar_raytracer_add(color, attenuation), STRUCT_INIT(Vector) { 500.0f, 400.0f, 100.0f }), incidence);
 
 				break;
 			}
 
 			case PIXAR_RAYTRACER_SUN: {
-				color = benchmark_pixar_raytracer_multiply(benchmark_pixar_raytracer_add(color, attenuation), (Vector){ 50.0f, 80.0f, 100.0f });
+				color = benchmark_pixar_raytracer_multiply(benchmark_pixar_raytracer_add(color, attenuation), STRUCT_INIT(Vector) { 50.0f, 80.0f, 100.0f });
 
 				goto escape;
 			}
@@ -514,7 +526,7 @@ EXPORT float benchmark_pixar_raytracer(uint32_t width, uint32_t height, uint32_t
 
 			color = benchmark_pixar_raytracer_multiply_float(color, (1.0f / samples) + 14.0f / 241.0f);
 			adjust = benchmark_pixar_raytracer_add_float(color, 1.0f);
-			color = (Vector){
+			color = STRUCT_INIT(Vector) {
 				color.x / adjust.x,
 				color.y / adjust.y,
 				color.z / adjust.z
@@ -591,9 +603,9 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 	Boid* fireflies = (Boid*)MALLOC(boids * sizeof(Boid), 16);
 
 	for (int i = 0; i < boids; ++i) {
-		fireflies[i].position = (Vector){ benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
-		fireflies[i].velocity = (Vector){ benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
-		fireflies[i].acceleration = (Vector){ 0.0f, 0.0f, 0.0f };
+		fireflies[i].position = STRUCT_INIT(Vector) { benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
+		fireflies[i].velocity = STRUCT_INIT(Vector) { benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
+		fireflies[i].acceleration = STRUCT_INIT(Vector) { 0.0f, 0.0f, 0.0f };
 	}
 
 	for (int i = 0; i < lifetime; ++i) {
@@ -938,7 +950,7 @@ inline static int benchmark_radix_find_largest(int* array, int length) {
 
 static void benchmark_radix_sort(int* array, int length) {
 	int i;
-	int semiSorted[length];
+    ALLOCA(int, semiSorted, length);
 	int significantDigit = 1;
 	int largest = benchmark_radix_find_largest(array, length);
 
