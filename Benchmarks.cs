@@ -42,7 +42,7 @@ public class Benchmarks : JobComponentSystem {
 	// Mandelbrot
 
 	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
-    public struct MandelbrotBurst : IJob {
+	public struct MandelbrotBurst : IJob {
 		public uint width;
 		public uint height;
 		public uint iterations;
@@ -113,7 +113,7 @@ public class Benchmarks : JobComponentSystem {
 	}
 
 	[BurstCompile(CompileSynchronously = true)]
-    public unsafe struct NBodyBurst : IJob {
+	public unsafe struct NBodyBurst : IJob {
 		public uint advancements;
 		public double result;
 
@@ -295,7 +295,7 @@ public class Benchmarks : JobComponentSystem {
 	// Sieve of Eratosthenes
 
 	[BurstCompile(CompileSynchronously = true)]
-    public unsafe struct SieveOfEratosthenesBurst : IJob {
+	public unsafe struct SieveOfEratosthenesBurst : IJob {
 		public uint iterations;
 		public uint result;
 
@@ -359,7 +359,7 @@ public class Benchmarks : JobComponentSystem {
 	}
 
 	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
-    public unsafe struct PixarRaytracerBurst : IJob {
+	public unsafe struct PixarRaytracerBurst : IJob {
 		public uint width;
 		public uint height;
 		public uint samples;
@@ -661,7 +661,7 @@ public class Benchmarks : JobComponentSystem {
 	}
 
 	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
-    public unsafe struct FirefliesFlockingBurst : IJob {
+	public unsafe struct FirefliesFlockingBurst : IJob {
 		public uint boids;
 		public uint lifetime;
 		public float result;
@@ -852,7 +852,7 @@ public class Benchmarks : JobComponentSystem {
 	// Polynomials
 
 	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
-    public unsafe struct PolynomialsBurst : IJob {
+	public unsafe struct PolynomialsBurst : IJob {
 		public uint iterations;
 		public float result;
 
@@ -905,7 +905,7 @@ public class Benchmarks : JobComponentSystem {
 	}
 
 	[BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
-    public unsafe struct ParticleKinematicsBurst : IJob {
+	public unsafe struct ParticleKinematicsBurst : IJob {
 		public uint quantity;
 		public uint iterations;
 		public float result;
@@ -958,7 +958,7 @@ public class Benchmarks : JobComponentSystem {
 	// Arcfour
 
 	[BurstCompile(CompileSynchronously = true)]
-    public unsafe struct ArcfourBurst : IJob {
+	public unsafe struct ArcfourBurst : IJob {
 		public uint iterations;
 		public uint result;
 
@@ -1052,7 +1052,7 @@ public class Benchmarks : JobComponentSystem {
 	// Seahash
 
 	[BurstCompile(CompileSynchronously = true)]
-    public unsafe struct SeahashBurst : IJob {
+	public unsafe struct SeahashBurst : IJob {
 		public uint iterations;
 		public ulong result;
 

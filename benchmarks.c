@@ -950,7 +950,7 @@ inline static int benchmark_radix_find_largest(int* array, int length) {
 
 static void benchmark_radix_sort(int* array, int length) {
 	int i;
-    ALLOCA(int, semiSorted, length);
+	ALLOCA(int, semiSorted, length);
 	int significantDigit = 1;
 	int largest = benchmark_radix_find_largest(array, length);
 
