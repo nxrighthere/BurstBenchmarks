@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
-#include <mm_malloc.h>
+#include <malloc.h>
 
 #define MALLOC(size, alignment) _mm_malloc(size, alignment)
 #define FREE(pointer) _mm_free(pointer)
@@ -13,15 +13,15 @@
 #endif
 
 #ifdef __cplusplus
-#define STRUCT_INIT(x) x
+	#define STRUCT_INIT(x) x
 #else
-#define STRUCT_INIT(x) (x)
+	#define STRUCT_INIT(x) (x)
 #endif
 
 #ifdef _MSC_VER
-#define ALLOCA(type, name, length) type* name = (type*)_alloca(sizeof(type) * length)
+	#define ALLOCA(type, name, length) type* name = (type*)_alloca(sizeof(type) * length)
 #else
-#define ALLOCA(type, name, length) type name[length]
+	#define ALLOCA(type, name, length) type name[length]
 #endif
 
 // Fibonacci
@@ -217,7 +217,7 @@ inline static void benchmark_nbody_advance(NBody* sun, NBody* end, double distan
 }
 
 EXPORT double benchmark_nbody(uint32_t advancements) {
-	NBody sun[5] = { 0 };
+	ALLOCA(NBody, sun, 5);
 	NBody* end = sun + 4;
 
 	benchmark_nbody_initialize_bodies(sun, end);
@@ -237,7 +237,7 @@ EXPORT double benchmark_nbody(uint32_t advancements) {
 EXPORT uint32_t benchmark_sieve_of_eratosthenes(uint32_t iterations) {
 	const int size = 1024;
 
-	uint8_t flags[size];
+	ALLOCA(uint8_t, flags, size);
 	uint32_t a, b, c, prime, count = 0;
 
 	for (a = 1; a <= iterations; a++) {
@@ -355,7 +355,7 @@ static float benchmark_pixar_raytracer_sample(Vector position, int* hitType) {
 
 	float distance = 1e9f;
 	Vector f = position;
-	uint8_t letters[size];
+	ALLOCA(uint8_t, letters, size);
 
 	// P              // I              // X              // A              // R
 	letters[0]  = 53; letters[12] = 65; letters[24] = 73; letters[32] = 85; letters[44] = 97; letters[56] = 99;
@@ -383,7 +383,7 @@ static float benchmark_pixar_raytracer_sample(Vector position, int* hitType) {
 
 	distance = sqrtf(distance);
 
-	Vector curves[2] = { 0 };
+	ALLOCA(Vector, curves, 2);
 
 	curves[0] = STRUCT_INIT(Vector) { -11.0f, 6.0f, 0.0f };
 	curves[1] = STRUCT_INIT(Vector) { 11.0f, 6.0f, 0.0f };
@@ -711,7 +711,7 @@ EXPORT float benchmark_polynomials(uint32_t iterations) {
 	const float x = 0.2f;
 
 	float pu = 0.0f;
-	float poly[100] = { 0 };
+	ALLOCA(float, poly, 100);
 
 	for (uint32_t i = 0; i < iterations; i++) {
 		float mu = 10.0f;
@@ -808,8 +808,8 @@ EXPORT uint32_t benchmark_arcfour(uint32_t iterations) {
 
 	uint8_t* state = (uint8_t*)MALLOC(256, 8);
 	uint8_t* buffer = (uint8_t*)MALLOC(64, 8);
-	uint8_t key[keyLength];
-	uint8_t stream[streamLength];
+	ALLOCA(uint8_t, key, keyLength);
+	ALLOCA(uint8_t, stream, streamLength);
 
 	key[0] = 0xDB;
 	key[1] = 0xB7;
@@ -955,7 +955,7 @@ static void benchmark_radix_sort(int* array, int length) {
 	int largest = benchmark_radix_find_largest(array, length);
 
 	while (largest / significantDigit > 0) {
-		int bucket[10] = { 0 };
+		ALLOCA(int, bucket, 10);
 
 		for (i = 0; i < length; i++) {
 			bucket[(array[i] / significantDigit) % 10]++;
