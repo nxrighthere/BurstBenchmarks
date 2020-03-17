@@ -15,7 +15,7 @@ RyuJIT (.NET Core 3.1.101)
   <img src="https://i.imgur.com/8wMZwJO.png" alt="Arcfour">
   <img src="https://i.imgur.com/9lwLAca.png" alt="Seahash">
   <img src="https://i.imgur.com/1nWJKk3.png" alt="Radix">
- </p>
+</p>
 
 ## Single-precision math
 
@@ -25,13 +25,13 @@ RyuJIT (.NET Core 3.1.101)
   <img src="https://i.imgur.com/NhCzjDA.png" alt="Fireflies Flocking">
   <img src="https://i.imgur.com/DoJioB8.png" alt="Polynomials">
   <img src="https://i.imgur.com/IdVjMo3.png" alt="Particle Kinematics">
- </p>
+</p>
 
 ## Double-precision math
 
 <p align="center"> 
   <img src="https://i.imgur.com/JnhjPm9.png" alt="NBody">
- </p>
+</p>
 
 Discussion
 --------
@@ -43,3 +43,6 @@ These wonderful people make open-source better:
 <p align="left"> 
   <img src="https://github.com/Rageware/Supporters/blob/master/burstbenchmarks-supporters.png" alt="supporters">
 </p>
+
+This project is sponsored by [JetBrains](https://www.jetbrains.com/?from=BurstBenchmarks).<br/>
+<a href="https://www.jetbrains.com/?from=BurstBenchmarks"><img src="https://i.imgur.com/zLguWAH.png" alt="Mandelbrot"></a>
