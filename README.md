@@ -35,7 +35,7 @@ RyuJIT (.NET Core 3.1.101)
 
 Discussion
 --------
-Feel free to join the discussion in the [thread](https://forum.unity.com/threads/benchmarking-burst-against-gcc-machine-code-fibonacci-mandelbrot-nbody.715133/) on Unity forums.
+You can find the discussion in the [thread](https://forum.unity.com/threads/benchmarking-burst-against-gcc-machine-code-fibonacci-mandelbrot-nbody.715133/) on Unity forums.
 
 Supporters
 --------
