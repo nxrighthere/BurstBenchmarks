@@ -13,15 +13,15 @@
 #endif
 
 #ifdef __cplusplus
-#define STRUCT_INIT(x) x
+	#define STRUCT_INIT(x) x
 #else
-#define STRUCT_INIT(x) (x)
+	#define STRUCT_INIT(x) (x)
 #endif
 
 #ifdef _MSC_VER
-#define ALLOCA(type, name, length) type* name = (type*)_alloca(sizeof(type) * length)
+	#define ALLOCA(type, name, length) type* name = (type*)_alloca(sizeof(type) * length)
 #else
-#define ALLOCA(type, name, length) type name[length]
+	#define ALLOCA(type, name, length) type name[length]
 #endif
 
 // Fibonacci
@@ -223,7 +223,7 @@ EXPORT double benchmark_nbody(uint32_t advancements) {
 	benchmark_nbody_initialize_bodies(sun, end);
 	benchmark_nbody_energy(sun, end);
 
-	while (advancements-- > 0) {
+	while (--advancements > 0) {
 		benchmark_nbody_advance(sun, end, 0.01);
 	}
 
@@ -771,7 +771,7 @@ EXPORT float benchmark_particle_kinematics(uint32_t quantity, uint32_t iteration
 
 // Arcfour
 
-inline static void benchmark_arcfour_key_setup(uint8_t* state, uint8_t* key, int length) {
+inline static int benchmark_arcfour_key_setup(uint8_t* state, uint8_t* key, int length) {
 	int i, j;
 	uint8_t t;
 
@@ -785,9 +785,11 @@ inline static void benchmark_arcfour_key_setup(uint8_t* state, uint8_t* key, int
 		state[i] = state[j];
 		state[j] = t;
 	}
+
+	return i;
 }
 
-inline static void benchmark_arcfour_generate_stream(uint8_t* state, uint8_t* buffer, int length) {
+inline static int benchmark_arcfour_generate_stream(uint8_t* state, uint8_t* buffer, int length) {
 	int i, j;
 	int idx;
 	uint8_t t;
@@ -800,9 +802,11 @@ inline static void benchmark_arcfour_generate_stream(uint8_t* state, uint8_t* bu
 		state[j] = t;
 		buffer[idx] = state[(state[i] + state[j]) % 256];
 	}
+
+	return i;
 }
 
-EXPORT uint32_t benchmark_arcfour(uint32_t iterations) {
+EXPORT int benchmark_arcfour(uint32_t iterations) {
 	const int keyLength = 5;
 	const int streamLength = 10;
 
@@ -828,11 +832,11 @@ EXPORT uint32_t benchmark_arcfour(uint32_t iterations) {
 	stream[8] = 0xA7;
 	stream[9] = 0x19;
 
-	uint32_t idx;
+	int idx = 0;
 
-	for (idx = 0; idx < iterations; idx++) {
-		benchmark_arcfour_key_setup(state, key, keyLength);
-		benchmark_arcfour_generate_stream(state, buffer, streamLength);
+	for (uint32_t i = 0; i < iterations; i++) {
+		idx = benchmark_arcfour_key_setup(state, key, keyLength);
+		idx = benchmark_arcfour_generate_stream(state, buffer, streamLength);
 	}
 
 	FREE(state);

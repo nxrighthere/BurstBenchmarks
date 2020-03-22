@@ -128,7 +128,7 @@ public class Benchmarks : JobComponentSystem {
 			InitializeBodies(sun, end);
 			Energy(sun, end);
 
-			while (advancements-- > 0) {
+			while (--advancements > 0) {
 				Advance(sun, end, 0.01);
 			}
 
@@ -960,13 +960,13 @@ public class Benchmarks : JobComponentSystem {
 	[BurstCompile(CompileSynchronously = true)]
 	public unsafe struct ArcfourBurst : IJob {
 		public uint iterations;
-		public uint result;
+		public int result;
 
 		public void Execute() {
 			result = Arcfour(iterations);
 		}
 
-		private uint Arcfour(uint iterations) {
+		private int Arcfour(uint iterations) {
 			const int keyLength = 5;
 			const int streamLength = 10;
 
@@ -992,11 +992,11 @@ public class Benchmarks : JobComponentSystem {
 			stream[8] = 0xA7;
 			stream[9] = 0x19;
 
-			uint idx;
+			int idx = 0;
 
-			for (idx = 0; idx < iterations; idx++) {
-				KeySetup(state, key, keyLength);
-				GenerateStream(state, buffer, streamLength);
+			for (uint i = 0; i < iterations; i++) {
+				idx = KeySetup(state, key, keyLength);
+				idx = GenerateStream(state, buffer, streamLength);
 			}
 
 			UnsafeUtility.Free(state, Allocator.Persistent);
@@ -1006,7 +1006,7 @@ public class Benchmarks : JobComponentSystem {
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private void KeySetup(byte* state, byte* key, int length) {
+		private int KeySetup(byte* state, byte* key, int length) {
 			int i, j;
 			byte t;
 
@@ -1020,10 +1020,12 @@ public class Benchmarks : JobComponentSystem {
 				state[i] = state[j];
 				state[j] = t;
 			}
+
+			return i;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private void GenerateStream(byte* state, byte* buffer, int length) {
+		private int GenerateStream(byte* state, byte* buffer, int length) {
 			int i, j;
 			int idx;
 			byte t;
@@ -1036,13 +1038,15 @@ public class Benchmarks : JobComponentSystem {
 				state[j] = t;
 				buffer[idx] = state[(state[i] + state[j]) % 256];
 			}
+
+			return i;
 		}
 	}
 
 	[BurstCompile(CompileSynchronously = true)]
 	private unsafe struct ArcfourGCC : IJob {
 		public uint iterations;
-		public uint result;
+		public int result;
 
 		public void Execute() {
 			result = benchmark_arcfour(iterations);
@@ -1868,7 +1872,7 @@ public class Benchmarks : JobComponentSystem {
 	private static extern float benchmark_particle_kinematics(uint quantity, uint iterations);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
-	private static extern uint benchmark_arcfour(uint iterations);
+	private static extern int benchmark_arcfour(uint iterations);
 
 	[DllImport(nativeLibrary, CallingConvention = CallingConvention.Cdecl)]
 	private static extern ulong benchmark_seahash(uint iterations);
