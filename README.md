@@ -1,6 +1,8 @@
 # BurstBenchmarks
 I was curious how well Burst/IL2CPP optimizes C# code against GCC/Clang with C, so I've ported five famous benchmarks, plus a raytracer, a minified flocking simulation, particle kinematics, a stream cipher, a hashing algorithm, and radix sort, with different workloads and made them identical between the two languages. C code compiled with all possible optimizations using `-DNDEBUG -Ofast -march=native -flto` compiler options. Benchmarks were done on Windows 10 w/ Ryzen 5 1400 using standalone build. Mono JIT and RyuJIT are included for fun.
 
+This project is [donated](https://github.com/nxrighthere/BurstBenchmarks/pull/1) to Unity's Burst compiler team as a performance test-suite to identify inconsistencies in the generated machine code in comparison to other compilers.
+
 Burst 1.2.3<br/>
 GCC 9.2.0<br/>
 Clang (LLVM 9.0.1)<br/>
