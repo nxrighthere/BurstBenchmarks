@@ -534,7 +534,7 @@ public class Benchmarks {
 			curves[0] = new Vector { x = -11.0f, y = 6.0f, z = 0.0f };
 			curves[1] = new Vector { x = 11.0f, y = 6.0f, z = 0.0f };
 
-			for (int i = 2; i > 0; i--) {
+			for (int i = 1; i >= 0; i--) {
 				Vector o = Add(f, MultiplyFloat(curves[i], -1.0f));
 				float m = 0.0f;
 
