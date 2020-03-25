@@ -48,10 +48,10 @@ EXPORT float benchmark_mandelbrot(uint32_t width, uint32_t height, uint32_t iter
 			deltaY = (bottom - top) / height,
 			coordinateX = left;
 
-		for (int x = 0; x < width; x++) {
+		for (uint32_t x = 0; x < width; x++) {
 			float coordinateY = top;
 
-			for (int y = 0; y < height; y++) {
+			for (uint32_t y = 0; y < height; y++) {
 				float workX = 0;
 				float workY = 0;
 				int counter = 0;
@@ -388,7 +388,7 @@ static float benchmark_pixar_raytracer_sample(Vector position, int* hitType) {
 	curves[0] = STRUCT_INIT(Vector) { -11.0f, 6.0f, 0.0f };
 	curves[1] = STRUCT_INIT(Vector) { 11.0f, 6.0f, 0.0f };
 
-	for (int i = 2; i > 0; i--) {
+	for (int i = 1; i >= 0; i--) {
 		Vector o = benchmark_pixar_raytracer_add(f, benchmark_pixar_raytracer_multiply_float(curves[i], -1.0f));
 		float m = 0.0f;
 
@@ -602,15 +602,15 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 
 	Boid* fireflies = (Boid*)MALLOC(boids * sizeof(Boid), 16);
 
-	for (int i = 0; i < boids; ++i) {
+	for (uint32_t i = 0; i < boids; ++i) {
 		fireflies[i].position = STRUCT_INIT(Vector) { benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
 		fireflies[i].velocity = STRUCT_INIT(Vector) { benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random(), benchmark_fireflies_flocking_random() };
 		fireflies[i].acceleration = STRUCT_INIT(Vector) { 0.0f, 0.0f, 0.0f };
 	}
 
-	for (int i = 0; i < lifetime; ++i) {
+	for (uint32_t i = 0; i < lifetime; ++i) {
 		// Update
-		for (int boid = 0; boid < boids; ++boid) {
+		for (uint32_t boid = 0; boid < boids; ++boid) {
 			benchmark_fireflies_flocking_add(&fireflies[boid].velocity, &fireflies[boid].acceleration);
 
 			float speed = benchmark_fireflies_flocking_length(&fireflies[boid].velocity);
@@ -625,11 +625,11 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 		}
 
 		// Separation
-		for (int boid = 0; boid < boids; ++boid) {
+		for (uint32_t boid = 0; boid < boids; ++boid) {
 			Vector separation = { 0 };
 			int count = 0;
 
-			for (int target = 0; target < boids; ++target) {
+			for (uint32_t target = 0; target < boids; ++target) {
 				Vector position = fireflies[boid].position;
 
 				benchmark_fireflies_flocking_subtract(&position, &fireflies[target].position);
@@ -664,11 +664,11 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 		}
 
 		// Cohesion
-		for (int boid = 0; boid < boids; ++boid) {
+		for (uint32_t boid = 0; boid < boids; ++boid) {
 			Vector cohesion = { 0 };
 			int count = 0;
 
-			for (int target = 0; target < boids; ++target) {
+			for (uint32_t target = 0; target < boids; ++target) {
 				Vector position = fireflies[boid].position;
 
 				benchmark_fireflies_flocking_subtract(&position, &fireflies[target].position);
@@ -702,7 +702,7 @@ EXPORT float benchmark_fireflies_flocking(uint32_t boids, uint32_t lifetime) {
 
 	FREE(fireflies);
 
-	return parkMiller;
+	return (float)parkMiller;
 }
 
 // Polynomials
