@@ -65,10 +65,10 @@ public class Benchmarks : JobComponentSystem {
 					deltaY = (bottom - top) / height,
 					coordinateX = left;
 
-				for (int x = 0; x < width; x++) {
+				for (uint x = 0; x < width; x++) {
 					float coordinateY = top;
 
-					for (int y = 0; y < height; y++) {
+					for (uint y = 0; y < height; y++) {
 						float workX = 0;
 						float workY = 0;
 						int counter = 0;
@@ -685,15 +685,15 @@ public class Benchmarks : JobComponentSystem {
 
 			Boid* fireflies = (Boid*)UnsafeUtility.Malloc(boids * sizeof(Boid), 16, Allocator.Persistent);
 
-			for (int i = 0; i < boids; ++i) {
+			for (uint i = 0; i < boids; ++i) {
 				fireflies[i].position = new Vector { x = Random(), y = Random(), z = Random() };
 				fireflies[i].velocity = new Vector { x = Random(), y = Random(), z = Random() };
 				fireflies[i].acceleration = new Vector { x = 0.0f, y = 0.0f, z = 0.0f };
 			}
 
-			for (int i = 0; i < lifetime; ++i) {
+			for (uint i = 0; i < lifetime; ++i) {
 				// Update
-				for (int boid = 0; boid < boids; ++boid) {
+				for (uint boid = 0; boid < boids; ++boid) {
 					Add(&fireflies[boid].velocity, &fireflies[boid].acceleration);
 
 					float speed = Length(&fireflies[boid].velocity);
@@ -708,11 +708,11 @@ public class Benchmarks : JobComponentSystem {
 				}
 
 				// Separation
-				for (int boid = 0; boid < boids; ++boid) {
+				for (uint boid = 0; boid < boids; ++boid) {
 					Vector separation = default(Vector);
 					int count = 0;
 
-					for (int target = 0; target < boids; ++target) {
+					for (uint target = 0; target < boids; ++target) {
 						Vector position = fireflies[boid].position;
 
 						Subtract(&position, &fireflies[target].position);
@@ -747,11 +747,11 @@ public class Benchmarks : JobComponentSystem {
 				}
 
 				// Cohesion
-				for (int boid = 0; boid < boids; ++boid) {
+				for (uint boid = 0; boid < boids; ++boid) {
 					Vector cohesion = default(Vector);
 					int count = 0;
 
-					for (int target = 0; target < boids; ++target) {
+					for (uint target = 0; target < boids; ++target) {
 						Vector position = fireflies[boid].position;
 
 						Subtract(&position, &fireflies[target].position);
@@ -785,7 +785,7 @@ public class Benchmarks : JobComponentSystem {
 
 			UnsafeUtility.Free(fireflies, Allocator.Persistent);
 
-			return parkMiller;
+			return (float)parkMiller;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
