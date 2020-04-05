@@ -468,11 +468,13 @@ public class Benchmarks {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private Vector Cross(Vector to, Vector from) {
-			to.y *= from.z - to.z * from.y;
-			to.z *= from.x - to.x * from.z;
-			to.x *= from.y - to.y * from.x;
+			Vector vector = default(Vector);
 
-			return to;
+			vector.x = to.y * from.z - to.z * from.y;
+			vector.y = to.z * from.x - to.x * from.z;
+			vector.z = to.x * from.y - to.y * from.x;
+
+			return vector;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
