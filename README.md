@@ -47,4 +47,4 @@ These wonderful people make open-source better:
 </p>
 
 This project is sponsored by [JetBrains](https://www.jetbrains.com/?from=BurstBenchmarks).<br/>
-<a href="https://www.jetbrains.com/?from=BurstBenchmarks"><img src="https://i.imgur.com/zLguWAH.png" alt="Mandelbrot"></a>
+<a href="https://www.jetbrains.com/?from=BurstBenchmarks"><img src="https://i.imgur.com/zLguWAH.png" alt="JetBrains"></a>
