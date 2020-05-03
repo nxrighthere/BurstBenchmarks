@@ -1096,12 +1096,12 @@ public class Benchmarks {
 			return value;
 		}
 
-		private ulong Compute(byte* buffer, int length, ulong a, ulong b, ulong c, ulong d) {
-			const int blockSize = 32;
+		private ulong Compute(byte* buffer, ulong length, ulong a, ulong b, ulong c, ulong d) {
+			const uint blockSize = 32;
 
-			int end = length & ~(blockSize - 1);
+			ulong end = length & ~(blockSize - 1);
 
-			for (int i = 0; i < end; i += blockSize) {
+			for (uint i = 0; i < end; i += blockSize) {
 				a ^= Read(buffer + i);
 				b ^= Read(buffer + i + 8);
 				c ^= Read(buffer + i + 16);
@@ -1113,7 +1113,7 @@ public class Benchmarks {
 				d = Diffuse(d);
 			}
 
-			int excessive = length - end;
+			ulong excessive = length - end;
 			byte* bufferEnd = buffer + end;
 
 			if (excessive > 0) {
@@ -1142,7 +1142,7 @@ public class Benchmarks {
 			a ^= b;
 			c ^= d;
 			a ^= c;
-			a ^= (ulong)length;
+			a ^= length;
 
 			return Diffuse(a);
 		}

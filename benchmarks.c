@@ -861,10 +861,10 @@ inline static uint64_t benchmark_seahash_diffuse(uint64_t value) {
 	return value;
 }
 
-static uint64_t benchmark_seahash_compute(uint8_t* buffer, int length, uint64_t a, uint64_t b, uint64_t c, uint64_t d) {
-	const int blockSize = 32;
+static uint64_t benchmark_seahash_compute(uint8_t* buffer, uint64_t length, uint64_t a, uint64_t b, uint64_t c, uint64_t d) {
+	const uint32_t blockSize = 32;
 
-	int end = length & ~(blockSize - 1);
+	uint64_t end = length & ~(blockSize - 1);
 
 	for (int i = 0; i < end; i += blockSize) {
 		a ^= benchmark_seahash_read(buffer + i);
@@ -878,7 +878,7 @@ static uint64_t benchmark_seahash_compute(uint8_t* buffer, int length, uint64_t 
 		d = benchmark_seahash_diffuse(d);
 	}
 
-	int excessive = length - end;
+	uint64_t excessive = length - end;
 	uint8_t* bufferEnd = buffer + end;
 
 	if (excessive > 0) {
@@ -907,7 +907,7 @@ static uint64_t benchmark_seahash_compute(uint8_t* buffer, int length, uint64_t 
 	a ^= b;
 	c ^= d;
 	a ^= c;
-	a ^= (uint64_t)length;
+	a ^= length;
 
 	return benchmark_seahash_diffuse(a);
 }
