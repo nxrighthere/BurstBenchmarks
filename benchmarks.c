@@ -866,7 +866,7 @@ static uint64_t benchmark_seahash_compute(uint8_t* buffer, uint64_t length, uint
 
 	uint64_t end = length & ~(blockSize - 1);
 
-	for (int i = 0; i < end; i += blockSize) {
+	for (uint32_t i = 0; i < end; i += blockSize) {
 		a ^= benchmark_seahash_read(buffer + i);
 		b ^= benchmark_seahash_read(buffer + i + 8);
 		c ^= benchmark_seahash_read(buffer + i + 16);
